@@ -21,6 +21,19 @@ return new class extends Migration
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('lapor_sampah', function (Blueprint $table) {
+            $table->id();
+            $table->string('lokasi_sampah');
+            $table->string('rt');
+            $table->text('keterangan_lokasi_sampah')->nullable();
+            $table->string('jenis_sampah');
+            $table->float('berat_sampah')->nullable();
+            $table->string('foto_sampah')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('status')->default('pending');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -29,5 +42,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('personal_access_tokens');
+        Schema::dropIfExists('lapor_sampah');
     }
 };

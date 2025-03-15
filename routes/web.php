@@ -32,13 +32,13 @@ Route::get('/home', function () {
 
 Route::get('/riwayat-lapor', function () {
     return view('halaman.riwayat-lapor');
-})->middleware('isLogin');
+})->middleware('IsLogin');
 
 
 
 Route::get('/dashboard/warga', function () {
     return view('dashboard.warga');
-})->middleware('isLogin');
+})->middleware('IsLogin');
 
 Route::post('/dashboard/warga', function () {
     return view('dashboard.warga')->middleware('sesi');
@@ -49,13 +49,13 @@ Route::get('/halaman/setting', function () {
 });
 
 // Rute untuk halaman laporan sampah
-Route::get('/lapor-sampah', [LaporSampahController::class, 'create'])->middleware('isLogin');
+Route::get('/lapor-sampah', [LaporSampahController::class, 'create'])->name('lapor-sampah.create');
 Route::post('/lapor-sampah', [LaporSampahController::class, 'store'])->name('lapor-sampah.store');
 
 // Rute untuk halaman payment
 Route::get('/halaman/payment', function () {
     return view('halaman.payment');
-})->middleware('isLogin');
+})->middleware('IsLogin');
 
 Route::get('/layouts/main', function () {
     return view('layouts.main');
@@ -69,7 +69,7 @@ Route::middleware('isTamu')->group(function () {
     Route::post('/register', [SessionController::class, 'storeRegister'])->name('register.store');
 });
 
-Route::middleware('isLogin')->group(function () {
+Route::middleware('IsLogin')->group(function () {
     Route::get('/sesi/logout', [SessionController::class, 'logout'])->name('sesi.logout');
 });
 

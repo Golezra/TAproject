@@ -9,6 +9,8 @@ class LaporSampah extends Model
 {
     use HasFactory;
 
+    protected $table = 'lapor_sampah'; // Nama tabel yang benar
+
     protected $fillable = [
         'lokasi_sampah',
         'rt',

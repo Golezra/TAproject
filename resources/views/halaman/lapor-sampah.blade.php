@@ -9,27 +9,29 @@
 <script src="js/maps.js"></script>
 @endpush
 
-@if ($errors->any())
+<div class="container mt-3">
+  @if ($errors->any())
     <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+      <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
     </div>
-@endif
+  @endif
 
-@if (session('error'))
+  @if (session('error'))
     <div class="alert alert-danger">
-        {{ session('error') }}
+      {{ session('error') }}
     </div>
-@endif
+  @endif
 
-@if (session('success'))
+  @if (session('success'))
     <div class="alert alert-success">
-        {{ session('success') }}
+      {{ session('success') }}
     </div>
-@endif
+  @endif
+</div>
 
 @section('content')
     <!-- Dark mode switching -->
@@ -142,42 +144,25 @@
     <div class="container">
       <div class="card">
         <div class="card-body">
-          <form action="lapor-sampah.store" method="POST">
+          <form action="{{ route('lapor-sampah.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label class="form-label" for="lokasisampah">Lokasi Sampah</label>
-                <select class="form-select" id="lokasisampah" name="lokasisampah" aria-label="Pilih RT">
-                    <option value="" selected>Pilih RT</option>
-                    <option value="1">RT 12</option>
-                    <option value="2">RT 13</option>
-                </select>
-                <small class="text-muted" style="opacity: 0.6;">
-                    Pilih RT 12 atau RT 13
-                    <span style="color: red;">*</span>
-                </small>
+                <input type="text" name="lokasisampah" id="lokasisampah" class="form-control" required>
             </div>
 
             <div class="form-group">
                 <label class="form-label" for="keteranganlokasisampah">Keterangan Lokasi Sampah</label>
-                <input class="form-control" id="keteranganlokasisampah" type="text" name="keteranganlokasisampah" placeholder="Rumah Bapak/ Ibu..." required>
+                <textarea name="keteranganlokasisampah" id="keteranganlokasisampah" class="form-control" required></textarea>
             </div>
-            
 
             <div class="form-group">
                 <label class="form-label" for="jenisSampah">Jenis Sampah</label>
-                <select class="form-select" id="jenisSampah" name="jenisSampah" aria-label="Pilih jenis sampah">
-                    <option value="" selected>Pilih jenis sampah</option>
-                    <option value="organik">Organik</option>
-                    <option value="anorganik">Anorganik</option>
-                </select>
-                <small class="text-muted" style="opacity: 0.6;"> 
-                    Pilih jenis sampah Organik atau Anorganik
-                    <span style="color: red;">*</span>
-                </small>
+                <input type="text" name="jenisSampah" id="jenisSampah" class="form-control" required>
             </div>
 
            <div class="form-group">
-               <label class="form-label" for="beratSampah">Berat Sampah (Kg)</label>
+               <label class="form-label" for="beratSampah">Berat Sampah</label>
                <div class="input-group">
                    <input class="form-control" id="beratSampah" type="number" name="beratSampah" min="0" step="0.1" required>
                    <div class="input-group-append">
@@ -244,7 +229,7 @@
               <input class="form-control" id="inputDate" type="date" name="date">
             </div>
 
-            <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center" type="button">Laporkan
+            <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center" type="submit">Laporkan
               <i class="bi bi-arrow-right fz-16 ms-1"></i>
             </button>
           </form>

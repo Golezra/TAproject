@@ -35,6 +35,7 @@ class LaporSampahController extends Controller
             'jenis_sampah' => $request->jenisSampah,
             'berat_sampah' => $request->beratSampah,
             'status' => 'pending',
+            'user_id' => Auth::id(), // Menambahkan user_id
         ];
     
         // Tangani upload foto jika ada
@@ -46,7 +47,7 @@ class LaporSampahController extends Controller
         // Coba menyimpan data dan tangkap kesalahan
         try {
             LaporSampah::create($data);
-            return redirect()->route('halaman.payment')->with('success', 'Laporan berhasil dibuat!');
+            return redirect()->route('lapor-sampah.create')->with('success', 'Laporan berhasil dibuat!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal menyimpan laporan: ' . $e->getMessage());
         }
