@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LaporSampah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LaporSampahController extends Controller
 {
@@ -23,10 +24,10 @@ class LaporSampahController extends Controller
             'beratSampah' => 'required|numeric',
             'fotoSampah' => 'nullable|image|mimes:jpg,png,jpeg|max:2048', // Validasi untuk foto
         ]);
-    
+
         // Log data yang diterima
-        \Log::info($request->all());
-    
+        Log::info($request->all());
+
         // Inisialisasi data untuk disimpan
         $data = [
             'lokasi_sampah' => $request->lokasisampah,
@@ -37,13 +38,13 @@ class LaporSampahController extends Controller
             'status' => 'pending',
             'user_id' => Auth::id(), // Menambahkan user_id
         ];
-    
+
         // Tangani upload foto jika ada
         if ($request->hasFile('fotoSampah')) {
             $fileName = $request->file('fotoSampah')->store('img/foto-sampah', 'public'); // Simpan di folder public/img/foto-sampah
             $data['foto_sampah'] = $fileName; // Simpan nama file di database
         }
-    
+
         // Coba menyimpan data dan tangkap kesalahan
         try {
             LaporSampah::create($data);
