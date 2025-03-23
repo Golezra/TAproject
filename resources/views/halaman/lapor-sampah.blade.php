@@ -166,60 +166,51 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Nominal yang Harus Dibayar</label>
+                            <p id="nominalDisplay" class="text-success">Rp 0</p>
+                        </div>
+
                         <script>
-                            document.getElementById('beratSampah').addEventListener('input', function(event) {
-                                const value = event.target.value;
-                                if (!/^\d*\.?\d*$/.test(value)) {
-                                    event.target.value = value.slice(0, -1); // Remove last character if not valid
+                            document.getElementById('beratSampah').addEventListener('input', function() {
+                                const berat = parseFloat(this.value) || 0;
+                                const jenisSampah = document.getElementById('jenisSampah').value;
+                                let nominal = 0;
+
+                                if (jenisSampah === 'organik') {
+                                    nominal = berat * 5000;
+                                } else if (jenisSampah === 'anorganik') {
+                                    nominal = berat * 10000;
                                 }
+
+                                document.getElementById('nominalDisplay').textContent = 'Rp ' + nominal.toLocaleString('id-ID');
+                            });
+
+                            document.getElementById('jenisSampah').addEventListener('change', function() {
+                                const berat = parseFloat(document.getElementById('beratSampah').value) || 0;
+                                const jenisSampah = this.value;
+                                let nominal = 0;
+
+                                if (jenisSampah === 'organik') {
+                                    nominal = berat * 5000;
+                                } else if (jenisSampah === 'anorganik') {
+                                    nominal = berat * 10000;
+                                }
+
+                                document.getElementById('nominalDisplay').textContent = 'Rp ' + nominal.toLocaleString('id-ID');
                             });
                         </script>
 
-                        <div class="mb-3">
-                            <div class="element-heading mt-3">
-                                <label for="fotoSampah" class="form-label">Foto Sampah</label>
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label" for="fotoSampah">Foto Sampah</label>
+                            <input class="form-control" id="fotoSampah" type="file" name="fotoSampah"
+                                accept="image/*" required>
                             <small class="text-muted" style="opacity: 0.6;">
                                 Upload foto sampah yang jelas
                                 <span style="color: red;">*</span>
                             </small>
                         </div>
-                        <div class="container">
-                            <div class="card">
-                                <div class="card-body py-5 text-center">
-                                    <img class="w-75 mb-4" src="{{ asset('img/bg-img/ftosampah.png') }}" alt="">
-                                    <!-- Form -->
-                                    <div class="form-file">
-                                        <input class="form-control d-none" id="fotoSampah" type="file"
-                                            accept="image/*" capture="camera">
-                                        <div id="uploadMessage" class="text-success"></div>
-                                        <label class="form-file-label justify-content-center" for="fotoSampah">
-                                            <span
-                                                class="form-file-button btn btn-danger d-flex align-items-center justify-content-center shadow-lg">
-                                                <i class="bi bi-plus-circle me-2 fz-16"></i> Upload Foto
-                                            </span>
-                                        </label>
-                                    </div>
-                                    <h6 class="mt-4 mb-0">Supported files</h6>
-                                    <small>.jpg .png .jpeg</small>
-                                </div>
-                            </div>
-                        </div>
-                        <script>
-                            document.getElementById('fotoSampah').addEventListener('change', function(event) {
-                                const fileInput = event.target;
-                                const uploadMessage = document.getElementById('uploadMessage');
-                                const fileLabel = document.querySelector('label[for="fotoSampah"]'); // Menemukan label
-
-                                if (fileInput.files.length > 0) {
-                                    const fileName = fileInput.files[0].name;
-                                    uploadMessage.textContent = 'Berhasil menginput foto: ' + fileName; // Menampilkan pesan berhasil
-                                    fileLabel.style.display = 'none'; // Menyembunyikan label
-                                } else {
-                                    uploadMessage.textContent = 'Tidak ada file yang dipilih.'; // Pesan jika tidak ada file
-                                }
-                            });
-                        </script>
 
                         <div class="form-group">
                             <label class="form-label" for="inputDate">Tanggal</label>

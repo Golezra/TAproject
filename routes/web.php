@@ -30,11 +30,10 @@ Route::get('/home', function () {
 });
 
 
-Route::get('/riwayat-lapor', function () {
-    return view('halaman.riwayat-lapor');
-})->middleware('IsLogin');
-
-
+Route::get('/riwayat-lapor', [LaporSampahController::class, 'riwayat'])->name('riwayat-lapor');
+Route::get('/riwayat-lapor/edit/{id}', [LaporSampahController::class, 'edit'])->name('riwayat-lapor.edit');
+Route::post('/riwayat-lapor/update/{id}', [LaporSampahController::class, 'update'])->name('riwayat-lapor.update');
+Route::delete('/riwayat-lapor/delete/{id}', [LaporSampahController::class, 'destroy'])->name('riwayat-lapor.delete');
 
 Route::get('/dashboard/warga', function () {
     return view('dashboard.warga');
