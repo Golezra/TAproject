@@ -3,6 +3,7 @@
 @section('title', 'Edit Laporan')
 
 @section('content')
+
     <div class="container py-3">
         <h4>Edit Laporan Sampah</h4>
         @if ($errors->any())
@@ -16,7 +17,7 @@
         @endif
         <form action="{{ route('riwayat-lapor.update', $laporan->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
-            @method('POST') <!-- Pastikan method sesuai dengan route -->
+            @method('POST')
             <div class="form-group">
                 <label for="lokasisampah">Lokasi Sampah</label>
                 <input type="text" name="lokasisampah" id="lokasisampah" class="form-control"
