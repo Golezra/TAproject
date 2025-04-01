@@ -55,10 +55,10 @@ class SessionController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        if ($user->role === 'tim_operasional') {
-            return redirect()->route('tim-operasional.dashboard');
-        } elseif ($user->role === 'admin') {
+        if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
+        } elseif ($user->role === 'tim_operasional') { // Perbaiki pemeriksaan role
+            return redirect()->route('tim-operasional.dashboard');
         } else {
             return redirect()->route('warga.dashboard'); // Default untuk warga
         }

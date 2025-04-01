@@ -27,18 +27,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Card: Profil Tim Operasional -->
-        <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-header">Profil</div>
-                <div class="card-body">
-                    <h5 class="card-title">Profil Tim Operasional</h5>
-                    <p class="card-text">Lihat dan perbarui informasi profil Anda.</p>
-                    <a href="{{ route('tim-operasional.profil') }}" class="btn btn-light">View Details</a>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 @endsection

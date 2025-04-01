@@ -132,15 +132,45 @@
                                 <tr>
                                     <td>
                                         @if ($item->foto_sampah)
-                                            <img src="{{ asset('storage/' . $item->foto_sampah) }}" alt="Foto Sampah" width="100">
+                                            <img src="{{ asset('storage/' . $item->foto_sampah) }}" alt="Foto Sampah" width="100" style="cursor: pointer;"
+                                                data-bs-toggle="modal" data-bs-target="#fotoModal{{ $item->id }}">
                                         @else
                                             Tidak ada foto
+                                        @endif
+
+                                        <!-- Modal untuk Foto Sampah -->
+                                        @if ($item->foto_sampah)
+                                            <div class="modal fade" id="fotoModal{{ $item->id }}" tabindex="-1" aria-labelledby="fotoModalLabel{{ $item->id }}" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="fotoModalLabel{{ $item->id }}">Foto Sampah</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body text-center">
+                                                            <img src="{{ asset('storage/' . $item->foto_sampah) }}" alt="Foto Sampah" class="img-fluid" style="max-height: 500px;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endif
                                     </td>
                                     <td>{{ ucfirst($item->jenis_sampah) }}</td>
                                     <td>{{ $item->berat_sampah }}</td>
                                     <td>{{ $item->keterangan_lokasi_sampah }}</td>
-                                    <td>{{ ucfirst($item->status) }}</td>
+                                    <td>
+                                        {{ $item->status }} <!-- Debug: Tampilkan status laporan -->
+                                        @if (Auth::user()->role === 'admin' && $item->status === 'pending')
+                                            <form action="{{ route('riwayat-lapor.validasi', $item->id) }}" method="POST" style="display: inline-block;">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="btn btn-success btn-sm d-flex align-items-center"
+                                                    onclick="return confirm('Apakah Anda yakin ingin memvalidasi laporan ini?')">
+                                                    <i class="bi bi-check-circle me-1"></i> Validasi
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </td>
                                     <td>
                                         Rp {{ number_format($item->nominal, 0, ',', '.') }}
                                     </td>
@@ -149,43 +179,45 @@
                                     @endif
                                     <td>
                                         @if (Auth::user()->role === 'admin')
-                                            <!-- Tombol Edit (Hanya untuk Admin) -->
-                                            <a href="{{ route('riwayat-lapor.edit', $item->id) }}" class="btn btn-warning btn-sm">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
+                                            <div class="d-flex gap-2 align-items-center">
+                                                <!-- Tombol Edit -->
+                                                <a href="{{ route('riwayat-lapor.edit', $item->id) }}" class="btn btn-warning btn-sm d-flex align-items-center">
+                                                    <i class="bi bi-pencil me-1"></i> Edit
+                                                </a>
+
+                                                <!-- Tombol Hapus -->
+                                                @if (Gate::allows('delete', $item))
+                                                    <form action="{{ route('riwayat-lapor.delete', $item->id) }}" method="POST" style="display: inline-block;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm d-flex align-items-center"
+                                                            onclick="return confirm('Apakah Anda yakin ingin menghapus laporan ini?')">
+                                                            <i class="bi bi-trash me-1"></i> Hapus
+                                                        </button>
+                                                    </form>
+                                                @endif
+
+                                                <!-- Tombol Validasi -->
+                                                @if (Auth::user()->role === 'admin' && $item->status === 'pending')
+                                                    <form action="{{ route('riwayat-lapor.validasi', $item->id) }}" method="POST" style="display: inline-block;">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="btn btn-success btn-sm d-flex align-items-center"
+                                                            onclick="return confirm('Apakah Anda yakin ingin memvalidasi laporan ini?')">
+                                                            <i class="bi bi-check-circle me-1"></i> Validasi
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </div>
                                         @else
                                             <!-- Kolom Pembayaran (Hanya untuk User) -->
                                             @if ($item->status_bayar === 'belum lunas')
-                                                <a href="{{ route('riwayat-lapor.pembayaran', $item->id) }}" class="btn btn-primary btn-sm">
-                                                    <i class="bi bi-cash"></i> Bayar
+                                                <a href="{{ route('riwayat-lapor.pembayaran', $item->id) }}" class="btn btn-primary btn-sm d-flex align-items-center">
+                                                    <i class="bi bi-cash me-1"></i> Bayar
                                                 </a>
                                             @else
                                                 <span class="badge bg-success">Lunas</span>
                                             @endif
-                                        @endif
-
-                                        <!-- Tombol Hapus -->
-                                        @if (Auth::user()->role === 'admin' && Gate::allows('delete', $item))
-                                            <form action="{{ route('riwayat-lapor.delete', $item->id) }}" method="POST" style="display: inline-block;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus laporan ini?')">
-                                                    <i class="bi bi-trash"></i> <!-- Simbol Trash -->
-                                                </button>
-                                            </form>
-                                        @endif
-
-                                        <!-- Tombol Validasi -->
-                                        @if (Auth::user()->role === 'admin' && $item->status === 'pending')
-                                            <form action="{{ route('riwayat-lapor.validasi', $item->id) }}" method="POST" style="display: inline-block;">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="btn btn-success btn-sm"
-                                                    onclick="return confirm('Apakah Anda yakin ingin memvalidasi laporan ini?')">
-                                                    <i class="bi bi-check-circle"></i>
-                                                </button>
-                                            </form>
                                         @endif
 
                                         <!-- Tombol Ubah Status -->

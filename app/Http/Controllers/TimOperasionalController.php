@@ -9,23 +9,15 @@ class TimOperasionalController extends Controller
 {
     public function index()
     {
-        return view('dashboard.tim-operasional');
+        return view('dashboard.tim-operasional'); // Pastikan nama view sesuai
     }
 
     public function laporanMenunggu()
     {
+        // Ambil laporan dengan status 'menunggu diangkut'
         $laporan = LaporSampah::where('status', 'menunggu diangkut')->get();
+
+        // Kirim data ke view
         return view('tim-operasional.laporan-menunggu', compact('laporan'));
-    }
-
-    public function laporanDiangkut()
-    {
-        $laporan = LaporSampah::where('status', 'diangkut')->get();
-        return view('tim-operasional.laporan-diangkut', compact('laporan'));
-    }
-
-    public function profil()
-    {
-        return view('tim-operasional.profil');
     }
 }

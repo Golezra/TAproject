@@ -9,16 +9,13 @@ use App\Http\Controllers\WargaController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\AdminSettingController;
+use App\Http\Controllers\SaldoController;
+use App\Http\Controllers\ProfilController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Str;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
-use App\Mail\Registrasi;
 
 /*
 |--------------------------------------------------------------------------
-| Rute Web
+| Web Routes
 |--------------------------------------------------------------------------
 |
 | Di sinilah Anda dapat mendaftarkan rute web untuk aplikasi Anda.
@@ -27,46 +24,13 @@ use App\Mail\Registrasi;
 |
 */
 
+// Halaman Utama
 Route::get('/', function () {
     return view('halaman.hero-blocks');
 })->middleware('isTamu');
 
 Route::get('/home', function () {
     return view('halaman.home');
-});
-
-
-Route::get('/riwayat-lapor', [LaporSampahController::class, 'riwayat'])->name('riwayat-lapor');
-Route::get('/riwayat-lapor/edit/{id}', [LaporSampahController::class, 'edit'])->name('riwayat-lapor.edit');
-Route::post('/riwayat-lapor/update/{id}', [LaporSampahController::class, 'update'])->name('riwayat-lapor.update');
-Route::delete('/riwayat-lapor/delete/{id}', [LaporSampahController::class, 'destroy'])->name('riwayat-lapor.delete');
-Route::patch('/riwayat-lapor/{id}/ubah-status/{status}', [LaporSampahController::class, 'ubahStatus'])->name('riwayat-lapor.ubah-status');
-Route::patch('/riwayat-lapor/{id}/validasi', [LaporSampahController::class, 'validasi'])->name('riwayat-lapor.validasi');
-Route::get('/riwayat-lapor/{id}/pembayaran', [LaporSampahController::class, 'showPembayaran'])->name('riwayat-lapor.pembayaran');
-Route::post('/riwayat-lapor/{id}/bayar', [LaporSampahController::class, 'bayar'])->name('riwayat-lapor.bayar');
-
-Route::get('/dashboard/warga', [WargaController::class, 'index'])->name('warga.dashboard')->middleware('IsLogin');
-
-Route::post('/dashboard/warga', function () {
-    return view('dashboard.warga')->middleware('sesi');
-});
-
-Route::get('/halaman/setting', function () {
-    return view('halaman.setting');
-});
-
-// Rute untuk halaman laporan sampah
-Route::get('/lapor-sampah', [LaporSampahController::class, 'create'])->name('lapor-sampah.create');
-Route::post('/lapor-sampah', [LaporSampahController::class, 'store'])->name('lapor-sampah.store');
-Route::post('/laporan/{id}/validasi', [LaporSampahController::class, 'validasi'])->name('laporan.validasi');
-
-// Rute untuk halaman payment
-Route::get('/halaman/payment', function () {
-    return view('halaman.payment');
-})->middleware('IsLogin');
-
-Route::get('/layouts/main', function () {
-    return view('layouts.main');
 });
 
 // Rute Autentikasi
@@ -80,10 +44,10 @@ Route::middleware('isTamu')->group(function () {
 Route::middleware('IsLogin')->group(function () {
     Route::get('/sesi/logout', [SessionController::class, 'logout'])->name('sesi.logout');
     Route::post('/sesi/logout', [SessionController::class, 'logout'])->name('sesi.logout');
+    Route::get('/sesi/change-password', [SessionController::class, 'changePassword'])->name('sesi.change-password');
+    Route::post('/sesi/change-password', [SessionController::class, 'storeChangePassword'])->name('sesi.store-change-password');
 });
 
-Route::get('/sesi/change-password', [SessionController::class, 'changePassword'])->name('sesi.change-password');
-Route::post('/sesi/change-password', [SessionController::class, 'storeChangePassword'])->name('sesi.store-change-password');
 // Rute Reset Password
 Route::get('/sesi/forget-password', [SessionController::class, 'forgetPassword'])->name('sesi.forget-password');
 Route::post('/password/email', [SessionController::class, 'storeForgetPassword'])->name('sesi.store-forget-password');
@@ -96,22 +60,51 @@ Route::get('password/reset/{token}', [PasswordResetController::class, 'showReset
 Route::post('password/reset', [PasswordResetController::class, 'reset'])->name('password.update');
 Route::post('/verify-code', [PasswordResetController::class, 'verifyCode'])->name('verify.code');
 
+// Rute Warga
+Route::get('/dashboard/warga', [WargaController::class, 'index'])->name('warga.dashboard')->middleware('IsLogin');
+
 // Rute Tim Operasional
 Route::middleware(['auth', 'role:tim_operasional'])->group(function () {
     Route::get('/dashboard/tim-operasional', [TimOperasionalController::class, 'index'])->name('tim-operasional.dashboard');
     Route::get('/tim-operasional/laporan/menunggu', [TimOperasionalController::class, 'laporanMenunggu'])->name('tim-operasional.laporan.menunggu');
     Route::get('/tim-operasional/laporan/diangkut', [TimOperasionalController::class, 'laporanDiangkut'])->name('tim-operasional.laporan.diangkut');
     Route::get('/tim-operasional/profil', [TimOperasionalController::class, 'profil'])->name('tim-operasional.profil');
+    Route::patch('/riwayat-lapor/{id}/ubah-status/{status}', [LaporSampahController::class, 'ubahStatus'])->name('riwayat-lapor.ubah-status');
 });
 
 // Rute Admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard/admin', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
-
-    // Rute untuk halaman laporan
     Route::get('/admin/reports', [AdminReportController::class, 'index'])->name('admin.reports.index');
-
-    // Rute untuk halaman pengaturan
     Route::get('/admin/settings', [AdminSettingController::class, 'index'])->name('admin.settings.index');
+    Route::get('/riwayat-lapor/{id}/edit', [LaporSampahController::class, 'edit'])->name('riwayat-lapor.edit');
+    Route::patch('/riwayat-lapor/{id}/validasi', [LaporSampahController::class, 'validasi'])->name('riwayat-lapor.validasi');
 });
+
+// Rute Laporan Sampah
+Route::middleware(['auth'])->group(function () {
+    Route::get('/riwayat-lapor', [LaporSampahController::class, 'riwayat'])->name('riwayat-lapor');
+    Route::put('/riwayat-lapor/{id}', [LaporSampahController::class, 'update'])->name('riwayat-lapor.update');
+    Route::delete('/riwayat-lapor/{id}', [LaporSampahController::class, 'destroy'])->name('riwayat-lapor.delete');
+    Route::get('/riwayat-lapor/{id}/pembayaran', [LaporSampahController::class, 'pembayaran'])->name('riwayat-lapor.pembayaran');
+    Route::post('/riwayat-lapor/{id}/bayar', [LaporSampahController::class, 'bayar'])->name('riwayat-lapor.bayar');
+});
+
+Route::get('/lapor-sampah', [LaporSampahController::class, 'create'])->name('lapor-sampah.create');
+Route::post('/lapor-sampah', [LaporSampahController::class, 'store'])->name('lapor-sampah.store');
+
+// Rute Halaman Lain
+Route::get('/halaman/setting', function () {
+    return view('halaman.setting');
+});
+Route::get('/halaman/payment', function () {
+    return view('halaman.payment');
+})->middleware('IsLogin');
+Route::get('/layouts/main', function () {
+    return view('layouts.main');
+});
+
+// Rute Saldo dan Profil
+Route::get('/isi-saldo', [SaldoController::class, 'index'])->name('isi-saldo');
+Route::get('/edit-profil', [ProfilController::class, 'edit'])->name('edit-profil');

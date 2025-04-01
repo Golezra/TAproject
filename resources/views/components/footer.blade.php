@@ -19,9 +19,25 @@
         </li>
 
         <li>
-            <a href="{{ asset('dashboard/warga') }}">
-                <i class="bi bi-person"></i>
-            </a>
+            @if (Auth::check())
+                @if (Auth::user()->role === 'admin')
+                    <a href="{{ route('admin.dashboard') }}">
+                        <i class="bi bi-person"></i>
+                    </a>
+                @elseif (Auth::user()->role === 'tim_operasional')
+                    <a href="{{ route('tim-operasional.dashboard') }}">
+                        <i class="bi bi-person"></i>
+                    </a>
+                @elseif (Auth::user()->role === 'user')
+                    <a href="{{ route('warga.dashboard') }}">
+                        <i class="bi bi-person"></i>
+                    </a>
+                @endif
+            @else
+                <a href="{{ route('login') }}">
+                    <i class="bi bi-person"></i>
+                </a>
+            @endif
         </li>
 
         <li>

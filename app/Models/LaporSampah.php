@@ -13,13 +13,14 @@ class LaporSampah extends Model
 
     protected $fillable = [
         'lokasi_sampah',
-        'rt',
         'keterangan_lokasi_sampah',
         'jenis_sampah',
         'berat_sampah',
+        'status',
+        'status_bayar',
+        'status_laporan', // Tambahkan kolom ini
         'foto_sampah',
         'user_id',
-        'status',
     ];
 
     public function user()

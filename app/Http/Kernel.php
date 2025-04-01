@@ -68,4 +68,14 @@ class Kernel extends HttpKernel
         'isTamu' => \App\Http\Middleware\isTamu::class,
         'role' => \App\Http\Middleware\CheckRole::class,
     ];
+
+    /**
+     * The application's route middleware.
+     *
+     * @var array<string, class-string|string>
+     */
+    protected $routeMiddleware = [
+        // Middleware lainnya...
+        'role' => \App\Http\Middleware\CheckRole::class,
+    ];
 }

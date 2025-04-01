@@ -33,76 +33,62 @@
 
   <div class="page-content-wrapper py-3">
     <div class="container">
-      <!-- User Information-->
-      <div class="card user-info-card mb-3">
-        <div class="card-body d-flex align-items-center">
-          <div class="user-profile me-3">
-            <img src="{{ asset('img/pict/'.Auth::user()->pict) }}" alt="">
-            <i class="bi bi-pencil"></i>
-            <form action="#">
-              <input class="form-control" type="file">
-            </form>
+      <!-- User Information -->
+      <div class="card user-info-card mb-3 text-center">
+          <div class="card-body d-flex flex-column align-items-center">
+              <div class="user-profile mb-3">
+                  <img src="{{ asset('img/pict/' . Auth::user()->pict) }}" 
+                       alt="User Profile Picture" 
+                       class="rounded-circle shadow" 
+                       style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #f8f9fa;">
+              </div>
+              <div class="user-info">
+                  <h5 class="mb-1">{{ Auth::user()->name }}</h5>
+                  <span class="badge bg-warning ms-2 rounded-pill">Warga</span>
+              </div>
           </div>
-          <div class="user-info">
-            <div class="d-flex align-items-center">
-              <h5 class="mb-1">{{ Auth::user()->name }}</h5>
-              <span class="badge bg-warning ms-2 rounded-pill">Pro</span>
-            </div>
-            <p class="mb-0">{{ Auth::user()->role }}</p>
+          <!-- Tombol Isi Saldo dan Edit Profil -->
+          <div class="d-flex justify-content-center gap-3 mt-1 mb-2">
+              <a href="{{ route('isi-saldo') }}" class="btn btn-primary btn-sm">
+                  Isi Saldo
+              </a>
+              <a href="{{ route('edit-profil') }}" class="btn btn-warning btn-sm">
+                  Edit Profil
+              </a>
           </div>
-        </div>
       </div>
 
-      <!-- User Meta Data-->
-      <div class="card user-data-card">
-        <div class="card-body">
-          <form action="#">
-            <div class="form-group mb-3">
-              <label class="form-label" for="Username">Username</label>
-              <input class="form-control" id="Username" type="text" value="{{ Auth::user()->username }}" placeholder="Username"
-                readonly>
-            </div>
 
-            <div class="form-group mb-3">
-              <label class="form-label" for="fullname">Full Name</label>
-              <input class="form-control" id="fullname" type="text" value="{{ Auth::user()->name }}" placeholder="Full Name"
-                readonly>
-            </div>
-
-            <div class="form-group mb-3">
-              <label class="form-label" for="email">Email Address</label>
-              <input class="form-control" id="email" type="text" value="{{ Auth::user()->email }}" placeholder="Email Address"
-                readonly>
-            </div>
-
-            <div class="form-group mb-3">
-              <label class="form-label" for="job">Job Title</label>
-              <input class="form-control" id="job" type="text" value="{{ Auth::user()->role }}" placeholder="Job Title">
-            </div>
-
-            <div class="form-group mb-3">
-              <label class="form-label" for="portfolio">Portfolio URL</label>
-              <input class="form-control" id="portfolio" type="url" value="https://themeforest.net/user/designing-world"
-                placeholder="Portfolio URL">
-            </div>
-
-            <div class="form-group mb-3">
-              <label class="form-label" for="address">Address</label>
-              <input class="form-control" id="address" type="text" value="{{ Auth::user()->rt }}" placeholder="Address">
-            </div>
-
-            <div class="form-group mb-3">
-              <label class="form-label" for="bio">Bio</label>
-              <textarea class="form-control" id="bio" name="bio" cols="30" rows="10"
-                placeholder="Working as UX/UI Designer at Designing World since 2016."></textarea>
-            </div>
-
-            <button class="btn btn-success w-100" type="submit">Update Now</button>
-          </form>
-        </div>
+      <!-- User Meta Data -->
+      <div class="card user-data-card text-center">
+          <div class="card-body">
+              <h6 class="mb-3">Informasi Pengguna</h6>
+              <ul class="list-group list-group-flush">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span>Username</span>
+                      <span class="text-muted">{{ Auth::user()->username }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span>Nama Lengkap</span>
+                      <span class="text-muted">{{ Auth::user()->name }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span>Email</span>
+                      <span class="text-muted">{{ Auth::user()->email }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span>Role</span>
+                      <span class="text-muted">Warga</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span>Alamat</span>
+                      <span class="text-muted">{{ Auth::user()->rt }}</span>
+                  </li>
+              </ul>
+          </div>
       </div>
     </div>
-  </div>
+</div>
 
    <!-- Footer Nav -->
    <div class="footer-nav-area" id="footerNav">

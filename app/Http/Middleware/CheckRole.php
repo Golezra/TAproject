@@ -13,6 +13,6 @@ class CheckRole
             return $next($request);
         }
 
-        return redirect('/'); // Redirect ke halaman utama jika peran tidak sesuai
+        return redirect('/'); // Arahkan ke halaman utama jika role tidak sesuai
     }
 }

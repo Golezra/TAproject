@@ -80,12 +80,11 @@ class LaporSampahController extends Controller
     public function edit($id)
     {
         $laporan = LaporSampah::findOrFail($id);
-
-        // Pastikan hanya user yang membuat laporan yang bisa mengedit
-        if ($laporan->user_id !== Auth::id()) {
+        // Hanya Admin yang bisa mengedit
+        if (Auth::user()->role !== 'admin') {
             return redirect()->route('riwayat-lapor')->with('error', 'Anda tidak memiliki akses untuk mengedit laporan ini.');
         }
-
+        // Kirim data ke view
         return view('halaman.edit-lapor', compact('laporan'));
     }
 
@@ -145,8 +144,10 @@ class LaporSampahController extends Controller
             return redirect()->route('riwayat-lapor')->with('error', 'Anda tidak memiliki akses untuk memvalidasi laporan ini.');
         }
 
-        // Ubah status menjadi 'tervalidasi'
-        $laporan->status = 'tervalidasi';
+        // Ubah status menjadi 'menunggu diangkut'
+        $laporan->status = 'menunggu diangkut';
+        $laporan->status_bayar = 'belum lunas';
+        $laporan->status_laporan = 'selesai'; // Perbarui status_laporan
         $laporan->save();
 
         return redirect()->route('riwayat-lapor')->with('success', 'Laporan berhasil divalidasi.');
@@ -154,20 +155,19 @@ class LaporSampahController extends Controller
 
     public function ubahStatus($id, $status)
     {
+        // Temukan laporan berdasarkan ID
         $laporan = LaporSampah::findOrFail($id);
 
-        // Pastikan hanya admin atau tim operasional yang bisa mengubah status
-        if (Auth::user()->role === 'admin' && $status === 'menunggu diangkut') {
-            $laporan->status = 'menunggu diangkut';
-        } elseif (Auth::user()->role === 'tim_operasional' && $status === 'diangkut') {
-            $laporan->status = 'diangkut';
-        } else {
-            return redirect()->route('riwayat-lapor')->with('error', 'Anda tidak memiliki akses untuk mengubah status ini.');
+        // Pastikan hanya tim operasional yang dapat mengubah status
+        if (auth()->user()->role !== 'tim_operasional') {
+            return redirect()->route('tim-operasional.laporan.menunggu')->with('error', 'Anda tidak memiliki akses untuk mengubah status laporan ini.');
         }
 
+        // Ubah status laporan
+        $laporan->status = $status;
         $laporan->save();
 
-        return redirect()->route('riwayat-lapor')->with('success', 'Status laporan berhasil diubah menjadi ' . $status . '.');
+        return redirect()->route('tim-operasional.laporan.menunggu')->with('success', 'Status laporan berhasil diubah menjadi "' . ucfirst($status) . '".');
     }
 
     public function showPembayaran($id)
@@ -182,14 +182,32 @@ class LaporSampahController extends Controller
         return view('halaman.pembayaran', compact('laporan'));
     }
 
-    public function bayar(Request $request, $id)
+    public function bayar($id)
     {
         $laporan = LaporSampah::findOrFail($id);
 
-        // Ubah status_bayar menjadi 'lunas'
+        // Pastikan hanya pengguna yang memiliki laporan ini yang dapat membayar
+        if (Auth::id() !== $laporan->user_id) {
+            return redirect()->route('riwayat-lapor')->with('error', 'Anda tidak memiliki akses untuk membayar laporan ini.');
+        }
+
+        // Perbarui status pembayaran
         $laporan->status_bayar = 'lunas';
         $laporan->save();
 
         return redirect()->route('riwayat-lapor')->with('success', 'Pembayaran berhasil dilakukan.');
+    }
+
+    public function pembayaran($id)
+    {
+        $laporan = LaporSampah::findOrFail($id);
+
+        // Pastikan hanya pengguna yang memiliki laporan ini yang dapat mengakses
+        if (Auth::id() !== $laporan->user_id) {
+            return redirect()->route('riwayat-lapor')->with('error', 'Anda tidak memiliki akses ke pembayaran laporan ini.');
+        }
+
+        // Kirim data laporan ke view pembayaran
+        return view('halaman.pembayaran', compact('laporan'));
     }
 }

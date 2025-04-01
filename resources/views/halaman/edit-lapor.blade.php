@@ -50,6 +50,7 @@
                 @endif
             </div>
             <button type="submit" class="btn btn-primary mt-3">Simpan Perubahan</button>
+            <a href="{{ route('riwayat-lapor') }}" class="btn btn-secondary mt-3">Kembali</a>
         </form>
     </div>
 @endsection
