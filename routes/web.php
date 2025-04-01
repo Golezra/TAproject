@@ -3,6 +3,7 @@
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\LaporSampahController;
+use App\Http\Controllers\TimOperasionalController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Str;
@@ -34,6 +35,8 @@ Route::get('/riwayat-lapor', [LaporSampahController::class, 'riwayat'])->name('r
 Route::get('/riwayat-lapor/edit/{id}', [LaporSampahController::class, 'edit'])->name('riwayat-lapor.edit');
 Route::post('/riwayat-lapor/update/{id}', [LaporSampahController::class, 'update'])->name('riwayat-lapor.update');
 Route::delete('/riwayat-lapor/delete/{id}', [LaporSampahController::class, 'destroy'])->name('riwayat-lapor.delete');
+Route::patch('/riwayat-lapor/{id}/ubah-status/{status}', [LaporSampahController::class, 'ubahStatus'])->name('riwayat-lapor.ubah-status');
+Route::patch('/riwayat-lapor/{id}/validasi', [LaporSampahController::class, 'validasi'])->name('riwayat-lapor.validasi');
 
 Route::get('/dashboard/warga', function () {
     return view('dashboard.warga');
@@ -50,6 +53,7 @@ Route::get('/halaman/setting', function () {
 // Rute untuk halaman laporan sampah
 Route::get('/lapor-sampah', [LaporSampahController::class, 'create'])->name('lapor-sampah.create');
 Route::post('/lapor-sampah', [LaporSampahController::class, 'store'])->name('lapor-sampah.store');
+Route::post('/laporan/{id}/validasi', [LaporSampahController::class, 'validasi'])->name('laporan.validasi');
 
 // Rute untuk halaman payment
 Route::get('/halaman/payment', function () {
@@ -86,6 +90,10 @@ Route::get('password/reset/{token}', [PasswordResetController::class, 'showReset
 Route::post('password/reset', [PasswordResetController::class, 'reset'])->name('password.update');
 Route::post('/verify-code', [PasswordResetController::class, 'verifyCode'])->name('verify.code');
 
-// // Rute Lapor Sampah
-// Route::get('/lapor-sampah', [LaporSampahController::class, 'create'])->middleware('isLogin');
-// Route::post('/lapor-sampah', [LaporSampahController::class, 'store'])->name('lapor-sampah.store');
+// Rute Tim Operasional
+Route::middleware(['auth', 'role:tim_operasional'])->group(function () {
+    Route::get('/dashboard/tim-operasional', [TimOperasionalController::class, 'index'])->name('tim-operasional.dashboard');
+    Route::get('/tim-operasional/laporan/menunggu', [TimOperasionalController::class, 'laporanMenunggu'])->name('tim-operasional.laporan.menunggu');
+    Route::get('/tim-operasional/laporan/diangkut', [TimOperasionalController::class, 'laporanDiangkut'])->name('tim-operasional.laporan.diangkut');
+    Route::get('/tim-operasional/profil', [TimOperasionalController::class, 'profil'])->name('tim-operasional.profil');
+});

@@ -41,9 +41,8 @@ class LaporSampahController extends Controller
 
         // Tangani upload foto jika ada
         if ($request->hasFile('fotoSampah')) {
-            Log::info('File diterima: ' . $request->file('fotoSampah')->getClientOriginalName());
-            $fileName = $request->file('fotoSampah')->store('img/foto-sampah', 'public'); // Simpan di folder public/img/foto-sampah
-            $data['foto_sampah'] = $fileName; // Simpan nama file di database
+            $fileName = $request->file('fotoSampah')->store('img/foto-sampah', 'public');
+            $data['foto_sampah'] = $fileName; // Simpan path relatif ke database
         }
 
         // Coba menyimpan data dan tangkap kesalahan
@@ -58,7 +57,14 @@ class LaporSampahController extends Controller
     public function riwayat()
     {
         // Ambil data laporan sampah berdasarkan user yang sedang login
-        $laporan = LaporSampah::where('user_id', Auth::id())->get();
+        // Periksa apakah pengguna adalah admin?
+        if (Auth::user()->role === 'admin') {
+            // Jika admin, ambil semua laporan
+            $laporan = LaporSampah::all();
+        } else {
+            // Jika bukan admin, ambil laporan berdasarkan user_id
+            $laporan = LaporSampah::where('user_id', Auth::id())->get();
+        }
 
         // Tambahkan perhitungan nominal ke setiap laporan
         foreach ($laporan as $item) {
@@ -120,13 +126,47 @@ class LaporSampahController extends Controller
     {
         $laporan = LaporSampah::findOrFail($id);
 
-        // Pastikan hanya user yang membuat laporan yang bisa menghapus
-        if ($laporan->user_id !== Auth::id()) {
+        // Hanya admin yang dapat menghapus laporan
+        if (Auth::user()->role !== 'admin') {
             return redirect()->route('riwayat-lapor')->with('error', 'Anda tidak memiliki akses untuk menghapus laporan ini.');
         }
 
         $laporan->delete();
 
         return redirect()->route('riwayat-lapor')->with('success', 'Laporan berhasil dihapus.');
+    }
+
+    public function validasi($id)
+    {
+        $laporan = LaporSampah::findOrFail($id);
+
+        // Pastikan hanya admin yang bisa memvalidasi
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->route('riwayat-lapor')->with('error', 'Anda tidak memiliki akses untuk memvalidasi laporan ini.');
+        }
+
+        // Ubah status menjadi 'tervalidasi'
+        $laporan->status = 'tervalidasi';
+        $laporan->save();
+
+        return redirect()->route('riwayat-lapor')->with('success', 'Laporan berhasil divalidasi.');
+    }
+
+    public function ubahStatus($id, $status)
+    {
+        $laporan = LaporSampah::findOrFail($id);
+
+        // Pastikan hanya admin atau tim operasional yang bisa mengubah status
+        if (Auth::user()->role === 'admin' && $status === 'menunggu diangkut') {
+            $laporan->status = 'menunggu diangkut';
+        } elseif (Auth::user()->role === 'tim_operasional' && $status === 'diangkut') {
+            $laporan->status = 'diangkut';
+        } else {
+            return redirect()->route('riwayat-lapor')->with('error', 'Anda tidak memiliki akses untuk mengubah status ini.');
+        }
+
+        $laporan->save();
+
+        return redirect()->route('riwayat-lapor')->with('success', 'Status laporan berhasil diubah menjadi ' . $status . '.');
     }
 }
