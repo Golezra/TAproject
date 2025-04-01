@@ -118,7 +118,13 @@
                                 @if (Auth::user()->role === 'admin')
                                     <th>Nama Pengguna</th> <!-- Tambahkan kolom Nama Pengguna -->
                                 @endif
-                                <th>Aksi</th>
+                                <th>
+                                    @if (Auth::user()->role === 'admin')
+                                        Aksi
+                                    @else
+                                        Pembayaran
+                                    @endif
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -148,7 +154,7 @@
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                         @else
-                                            <!-- Kolom Status Bayar (Hanya untuk User) -->
+                                            <!-- Kolom Pembayaran (Hanya untuk User) -->
                                             @if ($item->status_bayar === 'belum lunas')
                                                 <form action="{{ route('riwayat-lapor.bayar', $item->id) }}" method="POST" style="display: inline-block;">
                                                     @csrf
