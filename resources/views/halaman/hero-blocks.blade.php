@@ -21,6 +21,18 @@
 
       <!-- Hero Block Content -->
       <div class="hero-block-content">
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <img class="mb-4" src="img/bg-img/19.png" alt="">
         <h2 class="display-4 text-white mb-3">Build your website easier with Affan</h2>
         <p class="text-white">Affan is a modern and latest technology based PWA mobile HTML template.</p>

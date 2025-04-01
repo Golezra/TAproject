@@ -66,8 +66,8 @@ class SessionController extends Controller
 
     public function logout()
     {
-        Auth::logout();
-        return redirect('sesi')->with('success', 'Anda telah logout');
+        Auth::logout(); // Logout pengguna
+        return redirect('/')->with('success', 'Anda berhasil logout.');
     }
 
     public function register()

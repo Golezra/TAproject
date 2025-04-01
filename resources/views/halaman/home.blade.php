@@ -17,14 +17,11 @@
     @else
         <div class="offcanvas offcanvas-start" id="affanOffcanvas" data-bs-scroll="true" tabindex="-1"
             aria-labelledby="affanOffcanvsLabel">
-            <div class="offcanvas-body p-4">
-                <div class="d-flex justify-content-center">
-                    <p class="text-center mb-3">Anda harus login terlebih dahulu</p>
-                    <br>
-                    <a href="{{ route('login') }}" class="btn btn-primary">
-                        <i class="bi bi-box-arrow-in-right"></i> Login
-                    </a>
-                </div>
+            <div class="offcanvas-body d-flex flex-column justify-content-center align-items-center p-4">
+                <p class="text-center mb-3">Anda harus login terlebih dahulu</p>
+                <a href="{{ route('login') }}" class="btn btn-primary">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </a>
             </div>
         </div>
     @endauth

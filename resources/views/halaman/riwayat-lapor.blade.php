@@ -156,13 +156,9 @@
                                         @else
                                             <!-- Kolom Pembayaran (Hanya untuk User) -->
                                             @if ($item->status_bayar === 'belum lunas')
-                                                <form action="{{ route('riwayat-lapor.bayar', $item->id) }}" method="POST" style="display: inline-block;">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-primary btn-sm"
-                                                        onclick="return confirm('Apakah Anda yakin ingin membayar laporan ini?')">
-                                                        <i class="bi bi-cash"></i> Bayar
-                                                    </button>
-                                                </form>
+                                                <a href="{{ route('riwayat-lapor.pembayaran', $item->id) }}" class="btn btn-primary btn-sm">
+                                                    <i class="bi bi-cash"></i> Bayar
+                                                </a>
                                             @else
                                                 <span class="badge bg-success">Lunas</span>
                                             @endif

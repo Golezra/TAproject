@@ -6,6 +6,9 @@ use App\Http\Controllers\LaporSampahController;
 use App\Http\Controllers\TimOperasionalController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\WargaController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminReportController;
+use App\Http\Controllers\AdminSettingController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Str;
@@ -39,6 +42,8 @@ Route::post('/riwayat-lapor/update/{id}', [LaporSampahController::class, 'update
 Route::delete('/riwayat-lapor/delete/{id}', [LaporSampahController::class, 'destroy'])->name('riwayat-lapor.delete');
 Route::patch('/riwayat-lapor/{id}/ubah-status/{status}', [LaporSampahController::class, 'ubahStatus'])->name('riwayat-lapor.ubah-status');
 Route::patch('/riwayat-lapor/{id}/validasi', [LaporSampahController::class, 'validasi'])->name('riwayat-lapor.validasi');
+Route::get('/riwayat-lapor/{id}/pembayaran', [LaporSampahController::class, 'showPembayaran'])->name('riwayat-lapor.pembayaran');
+Route::post('/riwayat-lapor/{id}/bayar', [LaporSampahController::class, 'bayar'])->name('riwayat-lapor.bayar');
 
 Route::get('/dashboard/warga', [WargaController::class, 'index'])->name('warga.dashboard')->middleware('IsLogin');
 
@@ -74,6 +79,7 @@ Route::middleware('isTamu')->group(function () {
 
 Route::middleware('IsLogin')->group(function () {
     Route::get('/sesi/logout', [SessionController::class, 'logout'])->name('sesi.logout');
+    Route::post('/sesi/logout', [SessionController::class, 'logout'])->name('sesi.logout');
 });
 
 Route::get('/sesi/change-password', [SessionController::class, 'changePassword'])->name('sesi.change-password');
@@ -101,4 +107,11 @@ Route::middleware(['auth', 'role:tim_operasional'])->group(function () {
 // Rute Admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+
+    // Rute untuk halaman laporan
+    Route::get('/admin/reports', [AdminReportController::class, 'index'])->name('admin.reports.index');
+
+    // Rute untuk halaman pengaturan
+    Route::get('/admin/settings', [AdminSettingController::class, 'index'])->name('admin.settings.index');
 });

@@ -1,4 +1,4 @@
- <button class="btn-close btn-close-white text-reset" type="button" data-bs-dismiss="offcanvas"
+<button class="btn-close btn-close-white text-reset" type="button" data-bs-dismiss="offcanvas"
       aria-label="Close"></button>
 
     <div class="offcanvas-body p-0">
@@ -69,7 +69,12 @@
             </div>
           </li>
           <li>
-            <a href="/sesi/logout"><i class="bi bi-box-arrow-right"></i> Logout</a>
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+            <form id="logout-form" action="{{ route('sesi.logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
           </li>
         </ul>
 

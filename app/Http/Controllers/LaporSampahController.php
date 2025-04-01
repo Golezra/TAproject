@@ -169,4 +169,27 @@ class LaporSampahController extends Controller
 
         return redirect()->route('riwayat-lapor')->with('success', 'Status laporan berhasil diubah menjadi ' . $status . '.');
     }
+
+    public function showPembayaran($id)
+    {
+        $laporan = LaporSampah::findOrFail($id);
+
+        // Pastikan hanya laporan dengan status_bayar 'belum lunas' yang bisa diakses
+        if ($laporan->status_bayar === 'lunas') {
+            return redirect()->route('riwayat-lapor')->with('error', 'Laporan ini sudah dibayar.');
+        }
+
+        return view('halaman.pembayaran', compact('laporan'));
+    }
+
+    public function bayar(Request $request, $id)
+    {
+        $laporan = LaporSampah::findOrFail($id);
+
+        // Ubah status_bayar menjadi 'lunas'
+        $laporan->status_bayar = 'lunas';
+        $laporan->save();
+
+        return redirect()->route('riwayat-lapor')->with('success', 'Pembayaran berhasil dilakukan.');
+    }
 }
