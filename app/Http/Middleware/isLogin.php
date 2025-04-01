@@ -14,12 +14,19 @@ class Islogin
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
-        if(Auth::check()){
-            return $next($request);
-            
+        if (Auth::check()) {
+            // Redirect berdasarkan peran pengguna
+        if (Auth::user()->role === 'warga') {
+            return redirect()->route('warga.dashboard');
+        } elseif (Auth::user()->role === 'tim_operasional') {
+            return redirect()->route('tim-operasional.dashboard');
+        } elseif (Auth::user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
         }
-            return redirect('sesi')->withErrors(['loginError' => 'Anda belum login']);
+        }
+
+        return redirect('sesi')->with('error', 'Silakan login terlebih dahulu.');
     }
 }

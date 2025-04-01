@@ -4,6 +4,8 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\LaporSampahController;
 use App\Http\Controllers\TimOperasionalController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\WargaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Str;
@@ -38,9 +40,7 @@ Route::delete('/riwayat-lapor/delete/{id}', [LaporSampahController::class, 'dest
 Route::patch('/riwayat-lapor/{id}/ubah-status/{status}', [LaporSampahController::class, 'ubahStatus'])->name('riwayat-lapor.ubah-status');
 Route::patch('/riwayat-lapor/{id}/validasi', [LaporSampahController::class, 'validasi'])->name('riwayat-lapor.validasi');
 
-Route::get('/dashboard/warga', function () {
-    return view('dashboard.warga');
-})->middleware('IsLogin');
+Route::get('/dashboard/warga', [WargaController::class, 'index'])->name('warga.dashboard')->middleware('IsLogin');
 
 Route::post('/dashboard/warga', function () {
     return view('dashboard.warga')->middleware('sesi');
@@ -96,4 +96,9 @@ Route::middleware(['auth', 'role:tim_operasional'])->group(function () {
     Route::get('/tim-operasional/laporan/menunggu', [TimOperasionalController::class, 'laporanMenunggu'])->name('tim-operasional.laporan.menunggu');
     Route::get('/tim-operasional/laporan/diangkut', [TimOperasionalController::class, 'laporanDiangkut'])->name('tim-operasional.laporan.diangkut');
     Route::get('/tim-operasional/profil', [TimOperasionalController::class, 'profil'])->name('tim-operasional.profil');
+});
+
+// Rute Admin
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/dashboard/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 });

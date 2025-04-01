@@ -53,6 +53,17 @@ class SessionController extends Controller
         return redirect('sesi')->withErrors(['loginError' => 'Login gagal, silakan coba lagi.']);
     }
 
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->role === 'tim_operasional') {
+            return redirect()->route('tim-operasional.dashboard');
+        } elseif ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } else {
+            return redirect()->route('warga.dashboard'); // Default untuk warga
+        }
+    }
+
     public function logout()
     {
         Auth::logout();
@@ -226,5 +237,14 @@ class SessionController extends Controller
         // Logic to reset the password
         // After resetting the password, redirect to the login page
         return redirect()->route('login')->with('success', 'Password berhasil direset, silahkan login.');
+    }
+
+    public function handle($request, Closure $next, $role)
+    {
+        if (Auth::check() && Auth::user()->role === $role) {
+            return $next($request);
+        }
+
+        return redirect('/'); // Redirect ke halaman utama jika peran tidak sesuai
     }
 }
