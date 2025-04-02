@@ -61,7 +61,11 @@ Route::post('password/reset', [PasswordResetController::class, 'reset'])->name('
 Route::post('/verify-code', [PasswordResetController::class, 'verifyCode'])->name('verify.code');
 
 // Rute Warga
-Route::get('/dashboard/warga', [WargaController::class, 'index'])->name('warga.dashboard')->middleware('IsLogin');
+Route::middleware(['auth', 'IsLogin'])->group(function () {
+    Route::get('/dashboard/warga', [WargaController::class, 'index'])->name('warga.dashboard');
+    Route::get('/edit-profil', [WargaController::class, 'editProfil'])->name('warga.edit-profil');
+    Route::put('/update-profil', [WargaController::class, 'updateProfil'])->name('warga.update-profil');
+});
 
 // Rute Tim Operasional
 Route::middleware(['auth', 'role:tim_operasional'])->group(function () {
@@ -107,4 +111,3 @@ Route::get('/layouts/main', function () {
 
 // Rute Saldo dan Profil
 Route::get('/isi-saldo', [SaldoController::class, 'index'])->name('isi-saldo');
-Route::get('/edit-profil', [ProfilController::class, 'edit'])->name('edit-profil');

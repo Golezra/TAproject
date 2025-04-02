@@ -30,7 +30,9 @@ class User extends Authenticatable
         'pict',
         'email_verified_at',
         'verify_key',
-        'role'
+        'role',
+        'saldo',
+        'jumlah_lapor',
     ];
 
     /**

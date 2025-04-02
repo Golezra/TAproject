@@ -34,8 +34,8 @@
         @endif
 
         <img class="mb-4" src="img/bg-img/19.png" alt="">
-        <h2 class="display-4 text-white mb-3">Build your website easier with Affan</h2>
-        <p class="text-white">Affan is a modern and latest technology based PWA mobile HTML template.</p>
+        <h2 class="hero-title text-white mb-3">Sireum Smart: Teknologi Cerdas di Genggaman Anda</h2>
+        <p class="text-white">Solusi kampung Anda tidak didatangi oleh tim Pandawara Grup atau Gubernur Jawa Barat</p>
         <a class="btn btn-warning btn-lg w-100" href="{{ asset('/sesi')}}">Get Started</a> 
       </div>
     </div>

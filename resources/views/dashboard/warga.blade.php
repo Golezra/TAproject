@@ -6,17 +6,11 @@
 
 <!-- Alert Success -->
 @if(session('success'))
-    <div class="toast toast-autohide custom-toast-1 toast-primary home-page-toast shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="60000" data-bs-autohide="true" id="installWrap">
-        <div class="toast-body p-4">
-            <div class="toast-text me-2 d-flex align-items-center">
-                <img src="{{ asset('img/core-img/bell.gif') }}" alt="Warning Icon" class="me-2" style="width: 50px; height: 50px;">
-                <div>
-                    <h6 class="text-warning mb-0">Wilujeng Sumping</h6>
-                    {{ session('success') }}
-                </div>
-            </div>
-            <button class="btn btn-close btn-close-white position-absolute p-2" type="button" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
+    <div class="alert custom-alert-two alert-primary alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle"></i>
+        {{ session('success') }}
+        <button class="btn btn-close btn-close-white position-relative p-1 ms-auto" type="button"
+            data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
 
@@ -40,55 +34,111 @@
                   <img src="{{ asset('img/pict/' . Auth::user()->pict) }}" 
                        alt="User Profile Picture" 
                        class="rounded-circle shadow" 
-                       style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #f8f9fa;">
+                       style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #f8f9fa; cursor: pointer;"
+                       data-bs-toggle="modal" 
+                       data-bs-target="#profilePictureModal">
               </div>
               <div class="user-info">
                   <h5 class="mb-1">{{ Auth::user()->name }}</h5>
                   <span class="badge bg-warning ms-2 rounded-pill">Warga</span>
               </div>
           </div>
-          <!-- Tombol Isi Saldo dan Edit Profil -->
-          <div class="d-flex justify-content-center gap-3 mt-1 mb-2">
-              <a href="{{ route('isi-saldo') }}" class="btn btn-primary btn-sm">
-                  Isi Saldo
-              </a>
-              <a href="{{ route('edit-profil') }}" class="btn btn-warning btn-sm">
-                  Edit Profil
-              </a>
+          <hr class="my-2">
+          <!-- Informasi Jumlah Saldo dan Jumlah Lapor -->
+          <div class="d-flex justify-content-center align-items-center gap-3 mt-1 mb-2">
+              <div class="d-flex justify-content-center w-100 gap-5">
+                  <div class="text-primary text-center" style="font-size: 0.9rem;">
+                      Jumlah Lapor: {{ Auth::user()->jumlah_lapor }}
+                  </div>
+                  <div class="text-success text-center" style="font-size: 0.9rem;">
+                      Saldo: Rp. {{ number_format(Auth::user()->saldo, 0, ',', '.') }}
+                  </div>
+              </div>
           </div>
       </div>
+      
+    <!-- Card Pilihan Menu -->
+    <div class="card user-info-card mb-3 px-3">
+        <div class="card-body text-start">
+            <h6 class="card-title mb-3">Pilihan Menu</h6>
+            <div class="list-group list-group-flush">
+                <a href="{{ route('isi-saldo') }}" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <i class="bi bi-wallet2 me-2"></i> Isi Saldo
+                </a>
+                <a href="{{ route('riwayat-lapor') }}" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <i class="bi bi-clock-history me-2"></i> Riwayat Lapor
+                </a>
+                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <i class="bi bi-cash-coin me-2"></i> Insentif
+                </a>
+                <a href="{{ route('warga.edit-profil') }}" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <i class="bi bi-person-circle me-2"></i> Edit Profil
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Card Bantuan -->
+    <div class="card user-info-card mb-3 px-3">
+        <div class="card-body text-start">
+            <h6 class="card-title mb-3">Bantuan</h6>
+            <div class="list-group list-group-flush">
+                <a href="https://wa.me/6285797879723" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <i class="bi bi-whatsapp me-2 text-success"></i> Hubungi Kami di WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
 
+    <!-- Tombol Keluar Akun -->
+    <form action="{{ route('sesi.logout') }}" method="POST">
+        @csrf
+        <div class="card user-info-card mb-3 px-3">
+            <button type="submit" class="card-body d-flex justify-content-between align-items-center border-0 bg-transparent">
+                <span class="text-danger fw-bold">Keluar Akun</span>
+                <i class="bi bi-box-arrow-right text-danger" style="font-size: 1.5rem;"></i>
+            </button>
+        </div>
+    </form>
+</div>
 
-      <!-- User Meta Data -->
-      <div class="card user-data-card text-center">
-          <div class="card-body">
-              <h6 class="mb-3">Informasi Pengguna</h6>
-              <ul class="list-group list-group-flush">
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <span>Username</span>
-                      <span class="text-muted">{{ Auth::user()->username }}</span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <span>Nama Lengkap</span>
-                      <span class="text-muted">{{ Auth::user()->name }}</span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <span>Email</span>
-                      <span class="text-muted">{{ Auth::user()->email }}</span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <span>Role</span>
-                      <span class="text-muted">Warga</span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <span>Alamat</span>
-                      <span class="text-muted">{{ Auth::user()->rt }}</span>
-                  </li>
-              </ul>
-          </div>
-      </div>
+<!-- Modal untuk Foto Profil -->
+<div class="modal fade" id="profilePictureModal" tabindex="-1" aria-labelledby="profilePictureModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profilePictureModalLabel">Foto Profil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="{{ asset('img/pict/' . Auth::user()->pict) }}" 
+                     alt="User Profile Picture" 
+                     id="zoomableProfilePicture"
+                     class="img-fluid rounded-circle shadow"
+                     style="max-width: 100%; cursor: zoom-in;">
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const profilePicture = document.getElementById('zoomableProfilePicture');
+        let scale = 1;
+
+        profilePicture.addEventListener('wheel', function (event) {
+            event.preventDefault();
+            if (event.deltaY < 0) {
+                // Zoom in
+                scale += 0.1;
+            } else {
+                // Zoom out
+                scale = Math.max(1, scale - 0.1); // Jangan lebih kecil dari skala 1
+            }
+            profilePicture.style.transform = `scale(${scale})`;
+        });
+    });
+</script>
 
    <!-- Footer Nav -->
    <div class="footer-nav-area" id="footerNav">
