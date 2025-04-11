@@ -18,6 +18,7 @@ class SessionController extends Controller
 {
     public function index()
     {
+        $activeSessions = User::where('last_login_at', '>=', now()->subDay())->count();
         return view('sesi.index');
     }
 
@@ -41,13 +42,23 @@ class SessionController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            // Log password yang di-hash dari database
-            Log::info('Hashed password from database: ' . $user->password);
+
+            // Perbarui waktu login terakhir
+            $user->last_login_at = now();
+            $user->save();
+
             if (!$user->email_verified_at) {
-                Log::info('Email not verified: ' . $user->email);
                 return redirect('sesi')->with('error', 'Anda belum terverifikasi, silakan cek email Anda untuk verifikasi.');
             }
-            return redirect($user->role == 'admin' ? 'dashboard/admin' : 'dashboard/warga')->with('success', 'Login berhasil');
+
+            // Periksa role pengguna dan arahkan ke dashboard yang sesuai
+            if ($user->role === 'admin') {
+                return redirect('dashboard/admin')->with('success', 'Login berhasil');
+            } elseif ($user->role === 'tim_operasional') {
+                return redirect('dashboard/tim-operasional')->with('success', 'Login berhasil');
+            } else {
+                return redirect('dashboard/warga')->with('success', 'Login berhasil');
+            }
         }
 
         return redirect('sesi')->withErrors(['loginError' => 'Login gagal, silakan coba lagi.']);
@@ -66,7 +77,17 @@ class SessionController extends Controller
 
     public function logout()
     {
-        Auth::logout(); // Logout pengguna
+        // Set kolom last_login_at menjadi null untuk pengguna yang sedang logout
+        $user = Auth::user();
+        if ($user) {
+            $user->last_login_at = null;
+            $user->save();
+        }
+
+        // Logout pengguna
+        Auth::logout();
+
+        // Redirect ke halaman utama dengan pesan sukses
         return redirect('/')->with('success', 'Anda berhasil logout.');
     }
 
@@ -81,7 +102,7 @@ class SessionController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-            'phone_number' => 'required|string|regex:/^\d{10,15}$/', // Validasi format nomor telepon
+            'phone_number' => 'required|string|regex:/^\d{10,15}$/', 
             'rt' => 'required|string|max:5',
             'nik' => 'required|unique:users|string|max:16',
             'pict' => 'required|mimes:jpg,jpeg,png|max:2048'

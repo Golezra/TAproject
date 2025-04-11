@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\LaporSampah;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Midtrans\Config;
+use Midtrans\Snap;
+use Midtrans\Notification;
+use Illuminate\Support\Str;
 
 class LaporSampahController extends Controller
 {
@@ -16,64 +21,80 @@ class LaporSampahController extends Controller
     // Rute untuk menampilkan form laporan sampah
     public function store(Request $request)
     {
-        // Validasi permintaan
+        // Validasi input
         $request->validate([
-            'lokasisampah' => 'required',
-            'keteranganlokasisampah' => 'required|string',
-            'jenisSampah' => 'required',
-            'beratSampah' => 'required|numeric',
-            'fotoSampah' => 'required|image|mimes:jpg,png,jpeg|max:2048', // Validasi untuk foto
+            'lokasi_sampah' => 'required|string',
+            'keterangan_lokasi_sampah' => 'required|string',
+            'jenis_sampah' => 'required|string',
+            'berat_sampah' => 'required|numeric',
+            'foto_sampah' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Log data yang diterima
-        Log::info($request->all());
+        // Ambil data pengguna yang sedang login
+        $user = auth()->user();
 
-        // Inisialisasi data untuk disimpan
+        // Hitung nominal berdasarkan jenis sampah dan berat
+        $nominal = 0;
+        if ($request->jenis_sampah === 'organik') {
+            $nominal = $request->berat_sampah * 5000;
+        } elseif ($request->jenis_sampah === 'anorganik') {
+            $nominal = $request->berat_sampah * 2500;
+        } elseif ($request->jenis_sampah === 'campuran') {
+            $nominal = $request->berat_sampah * 10000;
+        }
+
+        // Data yang akan disimpan
         $data = [
-            'lokasi_sampah' => $request->lokasisampah,
-            'rt' => $request->lokasisampah, // Menambahkan field 'rt'
-            'keterangan_lokasi_sampah' => $request->keteranganlokasisampah,
-            'jenis_sampah' => $request->jenisSampah,
-            'berat_sampah' => $request->beratSampah,
+            'lokasi_sampah' => $request->lokasi_sampah,
+            'rt' => $user->rt, // Ambil nilai RT dari tabel users
+            'keterangan_lokasi_sampah' => $request->keterangan_lokasi_sampah,
+            'jenis_sampah' => $request->jenis_sampah,
+            'berat_sampah' => $request->berat_sampah,
+            'nominal' => $nominal,
             'status' => 'pending',
-            'user_id' => Auth::id(), // Menambahkan user_id
+            'status_bayar' => 'belum lunas',
+            'status_laporan' => 'pending',
+            'user_id' => $user->id, // Ambil ID pengguna yang sedang login
         ];
 
-        // Tangani upload foto jika ada
-        if ($request->hasFile('fotoSampah')) {
-            $fileName = $request->file('fotoSampah')->store('img/foto-sampah', 'public');
-            $data['foto_sampah'] = $fileName; // Simpan path relatif ke database
+        // Simpan file foto sampah
+        if ($request->hasFile('foto_sampah')) {
+            $file = $request->file('foto_sampah');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/img/foto-sampah', $filename); // Simpan file ke storage/app/public/img/foto-sampah
+            $data['foto_sampah'] = 'img/foto-sampah/' . $filename; // Simpan path relatif ke database
+            Log::info('Path foto sampah:', ['path' => $data['foto_sampah']]);
         }
 
-        // Coba menyimpan data dan tangkap kesalahan
-        try {
-            LaporSampah::create($data);
-            return redirect()->route('lapor-sampah.create')->with('success', 'Laporan berhasil dibuat!');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menyimpan laporan: ' . $e->getMessage());
-        }
+        // Simpan ke database
+        LaporSampah::create($data);
+
+        // Perbarui jumlah laporan pengguna
+        $user->increment('jumlah_lapor');
+        $user->refresh();
+
+        Log::info('Jumlah laporan pengguna:', ['user_id' => $user->id, 'jumlah_lapor' => $user->jumlah_lapor]);
+
+        // Redirect dengan pesan sukses
+        return redirect()->back()->with('success', 'Laporan sampah berhasil disimpan.');
     }
 
-    public function riwayat()
+    public function riwayat(Request $request)
     {
-        // Ambil data laporan sampah berdasarkan user yang sedang login
-        // Periksa apakah pengguna adalah admin?
-        if (Auth::user()->role === 'admin') {
-            // Jika admin, ambil semua laporan
-            $laporan = LaporSampah::all();
-        } else {
-            // Jika bukan admin, ambil laporan berdasarkan user_id
-            $laporan = LaporSampah::where('user_id', Auth::id())->get();
+        $query = LaporSampah::query();
+
+        if (Auth::user()->role === 'user') {
+            $query->where('user_id', Auth::id());
         }
 
-        // Tambahkan perhitungan nominal ke setiap laporan
-        foreach ($laporan as $item) {
-            $item->nominal = $item->jenis_sampah === 'organik'
-                ? $item->berat_sampah * 5000
-                : $item->berat_sampah * 10000;
+        if ($request->has('month')) {
+            $month = $request->month;
+            $query->whereMonth('created_at', '=', date('m', strtotime($month)))
+                  ->whereYear('created_at', '=', date('Y', strtotime($month)));
         }
 
-        // Kirim data ke view
+        $laporan = $query->get();
+
         return view('halaman.riwayat-lapor', compact('laporan'));
     }
 
@@ -207,7 +228,92 @@ class LaporSampahController extends Controller
             return redirect()->route('riwayat-lapor')->with('error', 'Anda tidak memiliki akses ke pembayaran laporan ini.');
         }
 
-        // Kirim data laporan ke view pembayaran
-        return view('halaman.pembayaran', compact('laporan'));
+        // Konfigurasi Midtrans
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+        Config::$isSanitized = config('midtrans.is_sanitized');
+        Config::$is3ds = config('midtrans.is_3ds');
+
+        Log::info('Server Key:', ['key' => Config::$serverKey]);
+
+        // Data transaksi
+        $order_id = $laporan->order_id ?? 'LAPOR-' . $laporan->id . '-' . time();
+
+        $transactionDetails = [
+            'order_id' => $order_id,
+            'gross_amount' => $laporan->nominal, // Total pembayaran
+        ];
+
+        // Data item
+        $itemDetails = [
+            [
+                'id' => $laporan->id,
+                'price' => $laporan->nominal,
+                'quantity' => 1,
+                'name' => ucfirst($laporan->jenis_sampah),
+            ],
+        ];
+
+        // Data pelanggan
+        $customerDetails = [
+            'first_name' => $laporan->user->name,
+            'email' => $laporan->user->email,
+            'phone' => $laporan->user->phone_number,
+        ];
+
+        // Parameter transaksi
+        $transaction = [
+            'transaction_details' => $transactionDetails,
+            'item_details' => $itemDetails,
+            'customer_details' => $customerDetails,
+        ];
+
+        // Buat Snap Token
+        $snapToken = Snap::getSnapToken($transaction);
+
+        // Simpan order_id ke laporan
+        $laporan->order_id = $transactionDetails['order_id'];
+        $laporan->save();
+
+        // Kirim data ke view
+        return view('halaman.pembayaran', compact('laporan', 'snapToken'));
+    }
+
+    public function handleNotification(Request $request)
+    {
+        // Konfigurasi Midtrans
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+        Config::$isSanitized = config('midtrans.is_sanitized');
+        Config::$is3ds = config('midtrans.is_3ds');
+
+        // Ambil notifikasi dari Midtrans
+        $notification = new Notification();
+
+        $transactionStatus = $notification->transaction_status;
+        $orderId = $notification->order_id;
+
+        // Cari laporan berdasarkan order_id
+        $laporan = LaporSampah::where('order_id', $orderId)->first();
+
+        if (!$laporan) {
+            Log::error('Laporan tidak ditemukan untuk order_id: ' . $orderId);
+            return response()->json(['message' => 'Laporan tidak ditemukan'], 404);
+        }
+
+        // Perbarui status pembayaran berdasarkan status transaksi
+        if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
+            $laporan->status_bayar = 'lunas';
+        } elseif ($transactionStatus == 'pending') {
+            $laporan->status_bayar = 'menunggu';
+        } elseif ($transactionStatus == 'deny' || $transactionStatus == 'expire' || $transactionStatus == 'cancel') {
+            $laporan->status_bayar = 'gagal';
+        }
+
+        $laporan->save();
+
+        Log::info('Status pembayaran diperbarui untuk order_id: ' . $orderId . ' dengan status: ' . $transactionStatus);
+
+        return response()->json(['message' => 'Notifikasi berhasil diproses'], 200);
     }
 }

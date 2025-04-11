@@ -26,6 +26,7 @@
         <link href="{{ asset('plugins') }}/weather-icons-master/css/weather-icons.min.css" rel="stylesheet" type="text/css"/>	
         <link href="{{ asset('plugins') }}/metrojs/MetroJs.min.css" rel="stylesheet" type="text/css"/>	
         <link href="{{ asset('plugins') }}/toastr/toastr.min.css" rel="stylesheet" type="text/css"/>	
+        <link rel="stylesheet" href="{{ asset('style.css') }}">
 
         <!-- Theme Styles -->
         <link href="{{ asset('css/modern.min.css') }}" rel="stylesheet" type="text/css"/>

@@ -11,6 +11,7 @@ use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\AdminSettingController;
 use App\Http\Controllers\SaldoController;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -84,6 +85,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/settings', [AdminSettingController::class, 'index'])->name('admin.settings.index');
     Route::get('/riwayat-lapor/{id}/edit', [LaporSampahController::class, 'edit'])->name('riwayat-lapor.edit');
     Route::patch('/riwayat-lapor/{id}/validasi', [LaporSampahController::class, 'validasi'])->name('riwayat-lapor.validasi');
+    Route::delete('/admin/users/{id}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
 });
 
 // Rute Laporan Sampah
@@ -97,6 +99,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/lapor-sampah', [LaporSampahController::class, 'create'])->name('lapor-sampah.create');
 Route::post('/lapor-sampah', [LaporSampahController::class, 'store'])->name('lapor-sampah.store');
+Route::post('/midtrans/notification', [LaporSampahController::class, 'handleNotification'])->name('midtrans.notification');
 
 // Rute Halaman Lain
 Route::get('/halaman/setting', function () {
@@ -111,3 +114,6 @@ Route::get('/layouts/main', function () {
 
 // Rute Saldo dan Profil
 Route::get('/isi-saldo', [SaldoController::class, 'index'])->name('isi-saldo');
+
+// Rute Pembayaran
+Route::get('/pembayaran/{id}', [PaymentController::class, 'createTransaction'])->name('pembayaran.create');

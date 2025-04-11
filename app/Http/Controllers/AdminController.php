@@ -10,4 +10,12 @@ class AdminController extends Controller
     {
         return view('dashboard.admin'); 
     }
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id); 
+        $user->delete(); // Hapus pengguna
+
+        return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil dihapus.');
+    }
 }

@@ -126,14 +126,14 @@
 
                         <!-- Lokasi Sampah -->
                         <div class="form-group">
-                            <label class="form-label" for="lokasisampah">Lokasi Sampah</label>
+                            <label class="form-label" for="lokasi_sampah">Lokasi Sampah</label>
                             <div class="d-flex flex-wrap gap-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" id="rt12" name="lokasisampah" value="RT 12" required>
+                                    <input class="form-check-input" type="radio" id="rt12" name="lokasi_sampah" value="RT 12" required>
                                     <label class="form-check-label" for="rt12">RT 12</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" id="rt13" name="lokasisampah" value="RT 13" required>
+                                    <input class="form-check-input" type="radio" id="rt13" name="lokasi_sampah" value="RT 13" required>
                                     <label class="form-check-label" for="rt13">RT 13</label>
                                 </div>
                             </div>
@@ -145,24 +145,24 @@
 
                         <!-- Keterangan Lokasi Sampah -->
                         <div class="form-group">
-                            <label class="form-label" for="keteranganlokasisampah">Keterangan Lokasi Sampah</label>
-                            <input class="form-control" id="keteranganlokasisampah" type="text" name="keteranganlokasisampah" placeholder="Rumah Bapak/Ibu..." required>
+                            <label class="form-label" for="keterangan_lokasi_sampah">Keterangan Lokasi Sampah</label>
+                            <input class="form-control" id="keterangan_lokasi_sampah" type="text" name="keterangan_lokasi_sampah" placeholder="Rumah Bapak/Ibu..." required>
                         </div>
 
                         <!-- Jenis Sampah -->
                         <div class="form-group">
-                            <label class="form-label" for="jenisSampah">Jenis Sampah</label>
+                            <label class="form-label" for="jenis_sampah">Jenis Sampah</label>
                             <div class="d-flex flex-wrap gap-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" id="organik" name="jenisSampah" value="organik" required>
+                                    <input class="form-check-input" type="radio" id="organik" name="jenis_sampah" value="organik" required>
                                     <label class="form-check-label" for="organik">Organik</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" id="anorganik" name="jenisSampah" value="anorganik" required>
+                                    <input class="form-check-input" type="radio" id="anorganik" name="jenis_sampah" value="anorganik" required>
                                     <label class="form-check-label" for="anorganik">Anorganik</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" id="campuran" name="jenisSampah" value="campuran" required>
+                                    <input class="form-check-input" type="radio" id="campuran" name="jenis_sampah" value="campuran" required>
                                     <label class="form-check-label" for="campuran">Campuran</label>
                                 </div>
                             </div>
@@ -174,35 +174,33 @@
 
                         <!-- Berat Sampah -->
                         <div class="form-group">
-                            <label class="form-label" for="beratSampah">Berat Sampah</label>
+                            <label class="form-label" for="berat_sampah">Berat Sampah</label>
                             <div class="input-group">
-                                <input class="form-control" id="beratSampah" type="number" name="beratSampah" min="0" step="0.1" required>
+                                <input class="form-control" id="berat_sampah" type="number" name="berat_sampah" min="0" step="0.1" required>
                                 <div class="input-group-append">
                                     <span class="input-group-text">Kg</span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Nominal -->
+                        <!-- Nominal yang Harus Dibayar-->
                         <div class="form-group">
                             <label class="form-label">Nominal yang Harus Dibayar</label>
                             <p id="nominalDisplay" class="text-success">Rp 0</p>
-                        </div>
-
-                        <!-- Foto Sampah -->
-                        <div class="form-group">
-                            <label class="form-label" for="fotoSampah">Foto Sampah</label>
-                            <input class="form-control" id="fotoSampah" type="file" name="fotoSampah" accept="image/*" required>
                             <small class="text-muted" style="opacity: 0.6;">
-                                Upload foto sampah yang jelas
+                                Nominal akan dihitung berdasarkan jenis dan berat sampah
                                 <span style="color: red;">*</span>
                             </small>
                         </div>
 
-                        <!-- Tanggal -->
+                        <!-- Foto Sampah -->
                         <div class="form-group">
-                            <label class="form-label" for="inputDate">Tanggal</label>
-                            <input class="form-control" id="inputDate" type="date" name="date" required>
+                            <label class="form-label" for="foto_sampah">Foto Sampah</label>
+                            <input class="form-control" id="foto_sampah" type="file" name="foto_sampah" accept="image/*" required>
+                            <small class="text-muted" style="opacity: 0.6;">
+                                Upload foto sampah yang jelas
+                                <span style="color: red;">*</span>
+                            </small>
                         </div>
 
                         <!-- Submit Button -->
@@ -214,22 +212,22 @@
                     <script>
                         function validateForm() {
                             // Validasi Foto Sampah
-                            const fotoSampah = document.getElementById('fotoSampah');
-                            if (!fotoSampah.value) {
+                            const foto_sampah = document.getElementById('foto_sampah');
+                            if (!foto_sampah.value) {
                                 alert('Harap upload foto sampah.');
                                 return false;
                             }
 
                             // Validasi Lokasi Sampah
-                            const lokasiSampah = document.querySelectorAll('input[name="lokasisampah"]:checked');
-                            if (lokasiSampah.length === 0) {
+                            const lokasi_sampah = document.querySelectorAll('input[name="lokasi_sampah"]:checked');
+                            if (lokasi_sampah.length === 0) {
                                 alert('Harap pilih salah satu lokasi sampah.');
                                 return false;
                             }
 
                             // Validasi Jenis Sampah
-                            const jenisSampah = document.querySelectorAll('input[name="jenisSampah"]:checked');
-                            if (jenisSampah.length === 0) {
+                            const jenis_sampah = document.querySelectorAll('input[name="jenis_sampah"]:checked');
+                            if (jenis_sampah.length === 0) {
                                 alert('Harap pilih salah satu jenis sampah.');
                                 return false;
                             }
@@ -239,25 +237,64 @@
 
                         // Event listener untuk menghitung nominal
                         function calculateNominal() {
-                            const berat = parseFloat(document.getElementById('beratSampah').value) || 0;
-                            const jenisSampah = Array.from(document.querySelectorAll('input[name="jenisSampah"]:checked'))
+                            const berat = parseFloat(document.getElementById('berat_sampah').value) || 0;
+                            const jenis_sampah = Array.from(document.querySelectorAll('input[name="jenis_sampah"]:checked'))
                                 .map(radio => radio.value);
 
                             let nominal = 0;
 
-                            if (jenisSampah.includes('organik')) {
+                            if (jenis_sampah.includes('organik')) {
                                 nominal += berat * 5000;
                             }
-                            if (jenisSampah.includes('anorganik')) {
-                                nominal += berat * 10000;
+                            if (jenis_sampah.includes('anorganik')) {
+                                nominal += berat * 2500;
+                            }
+                            if (jenis_sampah.includes('campuran')) {
+                                nominal += berat * 10000; // Misalnya, campuran dihargai Rp 4000 per kg
                             }
 
                             document.getElementById('nominalDisplay').textContent = 'Rp ' + nominal.toLocaleString('id-ID');
                         }
 
-                        document.getElementById('beratSampah').addEventListener('input', calculateNominal);
-                        document.querySelectorAll('input[name="jenisSampah"]').forEach(radio => {
+                        document.getElementById('berat_sampah').addEventListener('input', calculateNominal);
+                        document.querySelectorAll('input[name="jenis_sampah"]').forEach(radio => {
                             radio.addEventListener('change', calculateNominal);
+                        });
+
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const jenis_sampahInputs = document.querySelectorAll('input[name="jenis_sampah"]');
+                            const berat_sampahInput = document.getElementById('berat_sampah');
+                            const simulasiBiaya = document.getElementById('simulasiBiaya');
+
+                            function hitungBiaya() {
+                                const jenis_sampah = document.querySelector('input[name="jenis_sampah"]:checked');
+                                const berat_sampah = parseFloat(beratSampahInput.value);
+
+                                if (jenis_sampah && !isNaN(berat_sampah)) {
+                                    let biayaPerKg = 0;
+
+                                    // Tentukan biaya per kg berdasarkan jenis sampah
+                                    if (jenis_sampah.value === 'organik') {
+                                        biayaPerKg = 5000;
+                                    } else if (jenis_sampah.value === 'anorganik') {
+                                        biayaPerKg = 2500;
+                                    }
+
+                                    // Hitung total biaya
+                                    const totalBiaya = biayaPerKg * berat_sampah;
+
+                                    // Tampilkan hasil
+                                    simulasiBiaya.textContent = `Total biaya: Rp ${totalBiaya.toLocaleString('id-ID')}`;
+                                } else {
+                                    simulasiBiaya.textContent = 'Masukkan jenis sampah dan berat untuk melihat biaya.';
+                                }
+                            }
+
+                            // Tambahkan event listener
+                            jenis_sampahInputs.forEach(input => {
+                                input.addEventListener('change', hitungBiaya);
+                            });
+                            berat_sampahInput.addEventListener('input', hitungBiaya);
                         });
                     </script>
                 </div>

@@ -15,7 +15,16 @@
           <!-- User Info -->
           <div class="user-info">
             <h6 class="user-name mb-0">{{ Auth::user()->name }}</h6>
-            <span>{{ Auth::user()->role }}</span>
+            <span>
+                @if (Auth::user()->role === 'user')
+                    Warga
+                @elseif (Auth::user()->role === 'tim_operasional')
+                    Tim Operasional
+                @elseif (Auth::user()->role === 'admin')
+                    Admin
+                @endif
+            </span>
+            <p class="mb-0 text-white">RT: {{ Auth::user()->rt ?? 'Tidak diketahui' }}</p> <!-- Menampilkan RT -->
           </div>
         </div>
 
@@ -24,16 +33,29 @@
           <li>
             <a href="{{asset('home')}}"><i class="bi bi-house-door"></i> Home</a>
           </li>
+
           <li>
-            <a href="elements.html"><i class="bi bi-person"></i> Akun
+            @if (Auth::user()->role === 'warga')
+                <a href="{{ route('warga.dashboard') }}"><i class="bi bi-house-door"></i> Dashboard Warga</a>
+            @elseif (Auth::user()->role === 'tim_operasional')
+                <a href="{{ route('tim-operasional.dashboard') }}"><i class="bi bi-house-door"></i> Dashboard Tim Operasional</a>
+            @elseif (Auth::user()->role === 'admin')
+                <a href="{{ route('admin.dashboard') }}"><i class="bi bi-house-door"></i> Dashboard Admin</a>
+            @endif
+          </li>
+
+          <li>
+            <a href="{{ route('warga.dashboard') }}"><i class="bi bi-person"></i> Akun
               <span class="badge bg-danger rounded-pill ms-2">220+</span>
             </a>
           </li>
+          
           <li>
-            <a href="pages.html"><i class="bi bi-wallet2"></i> Bayar & Insentif
+            <a href="{{ route('isi-saldo') }}"><i class="bi bi-wallet2"></i> Bayar & Insentif
               <span class="badge bg-success rounded-pill ms-2">100+</span>
             </a>
           </li>
+          
           <li>
             <a href="#"><i class="bi bi-trash"></i> Sampah</a>
             <ul>
@@ -42,18 +64,6 @@
               </li>
               <li>
                 <a href="{{asset('/riwayat-lapor')}}">Riwayat Lapor</a>
-              </li>
-              <li>
-                <a href="shop-list.html">  List</a>
-              </li>
-              <li>
-                <a href="shop-details.html"> Shop Details</a>
-              </li>
-              <li>
-                <a href="cart.html"> Cart</a>
-              </li>
-              <li>
-                <a href="checkout.html"> Checkout</a>
               </li>
             </ul>
           </li>

@@ -14,6 +14,23 @@
     </div>
 @endif
 
+<!-- Notifikasi -->
+@if(session('notifications'))
+    <div class="card mb-3">
+        <div class="card-header bg-primary text-white">Notifikasi</div>
+        <div class="card-body">
+            <ul class="list-group">
+                @foreach(session('notifications') as $notification)
+                    <li class="list-group-item">
+                        {{ $notification->message }}
+                        <span class="text-muted d-block" style="font-size: 0.8rem;">{{ $notification->created_at->diffForHumans() }}</span>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+@endif
+
     <!-- Header Area -->
     <div class="header-area" id="headerArea">
         @include('components.header-menu')
@@ -64,15 +81,19 @@
             <div class="list-group list-group-flush">
                 <a href="{{ route('isi-saldo') }}" class="list-group-item list-group-item-action d-flex align-items-center">
                     <i class="bi bi-wallet2 me-2"></i> Isi Saldo
+                    <i class="bi bi-chevron-right shadow ms-auto"></i>
                 </a>
                 <a href="{{ route('riwayat-lapor') }}" class="list-group-item list-group-item-action d-flex align-items-center">
                     <i class="bi bi-clock-history me-2"></i> Riwayat Lapor
+                    <i class="bi bi-chevron-right shadow ms-auto"></i>
                 </a>
                 <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
                     <i class="bi bi-cash-coin me-2"></i> Insentif
+                    <i class="bi bi-chevron-right shadow ms-auto"></i>
                 </a>
                 <a href="{{ route('warga.edit-profil') }}" class="list-group-item list-group-item-action d-flex align-items-center">
                     <i class="bi bi-person-circle me-2"></i> Edit Profil
+                    <i class="bi bi-chevron-right shadow ms-auto"></i>
                 </a>
             </div>
         </div>
@@ -89,17 +110,29 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Tombol Keluar Akun -->
     <form action="{{ route('sesi.logout') }}" method="POST">
         @csrf
-        <div class="card user-info-card mb-3 px-3">
+        <div class="card user-info-card bg-success mb-3 px-3">
             <button type="submit" class="card-body d-flex justify-content-between align-items-center border-0 bg-transparent">
-                <span class="text-danger fw-bold">Keluar Akun</span>
-                <i class="bi bi-box-arrow-right text-danger" style="font-size: 1.5rem;"></i>
+                <span class="text-white fw-bold">Keluar Akun</span>
+                <i class="bi bi-escape text-white" style="font-size: 1.5rem;"></i>
             </button>
         </div>
     </form>
+    <!-- Card Kritik dan Saran -->
+    <div class="card user-info-card mb-3 px-3">
+        <div class="card-body text-start">
+            <h6 class="card-title mb-3">Kritik dan Saran</h6>
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    Berikan masukan untuk perbaikan aplikasi Sireum Hideung
+                    <i class="bi bi-chevron-right shadow"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Modal untuk Foto Profil -->
