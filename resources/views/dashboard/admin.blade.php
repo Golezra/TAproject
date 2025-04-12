@@ -76,7 +76,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Pengaturan Sistem</h5>
                             <p class="card-text">Konfigurasi pengaturan aplikasi.</p>
-                            <a href="{{ route('admin.validasi.index') }}" class="btn btn-light">Lihat Detail</a>
+                            <a href="{{ route('admin.settings.index') }}" class="btn btn-light">Lihat Detail</a>
                         </div>
                     </div>
                 </div>

@@ -16,7 +16,7 @@
   <title>@yield('title')</title>
 
   <!-- Favicon -->
-  <link rel="icon" href="{{ secure_asset('img/core-img/ant.svg') }}">
+  <link rel="icon" href="{{ asset('img/core-img/ant.svg') }}">
   <!-- Apple Touch Icon -->
   <link rel="apple-touch-icon" href="{{ asset('img/icons/icon-96x96.png') }}">
   <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('img/icons/icon-152x152.png') }}">
@@ -24,9 +24,9 @@
   <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/icons/icon-180x180.png') }}">
 
   <!-- Style CSS -->
-  <link rel="stylesheet" href="{{ secure_asset('style.css') }}">
+  <link rel="stylesheet" href="{{ asset('style.css') }}">
 
-  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+  <link rel='stylesheet' href='http://cdn-uicons.flaticon.com/2.6.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
 
   <!-- Web App Manifest -->
   <link rel="manifest" href="{{ asset('manifest.json') }}">
@@ -43,30 +43,30 @@
   @yield('content')
 
   <!-- All JavaScript Files -->
-  <script src="{{ secure_asset('js') }}/bootstrap.bundle.min.js"></script>
-  <script src="{{ secure_asset('js') }}/slideToggle.min.js"></script>
-  <script src="{{ secure_asset('js') }}/internet-status.js"></script>
-  <script src="{{ secure_asset('js') }}/tiny-slider.js"></script>
-  <script src="{{ secure_asset('js') }}/venobox.min.js"></script>
-  <script src="{{ secure_asset('js') }}/countdown.js"></script>
-  <script src="{{ secure_asset('js') }}/rangeslider.min.js"></script>
-  <script src="{{ secure_asset('js') }}/vanilla-dataTables.min.js"></script>
-  <script src="{{ secure_asset('js') }}/index.js"></script>
-  <script src="{{ secure_asset('js') }}/imagesloaded.pkgd.min.js"></script>
-  <script src="{{ secure_asset('js') }}/isotope.pkgd.min.js"></script>
-  <script src="{{ secure_asset('js') }}/dark-rtl.js"></script>
-  <script src="{{ secure_asset('js') }}/active.js"></script>
-  <script src="{{ secure_asset('js') }}/pwa.js"></script>
+  <script src="{{ asset('js') }}/bootstrap.bundle.min.js"></script>
+  <script src="{{ asset('js') }}/slideToggle.min.js"></script>
+  <script src="{{ asset('js') }}/internet-status.js"></script>
+  <script src="{{ asset('js') }}/tiny-slider.js"></script>
+  <script src="{{ asset('js') }}/venobox.min.js"></script>
+  <script src="{{ asset('js') }}/countdown.js"></script>
+  <script src="{{ asset('js') }}/rangeslider.min.js"></script>
+  <script src="{{ asset('js') }}/vanilla-dataTables.min.js"></script>
+  <script src="{{ asset('js') }}/index.js"></script>
+  <script src="{{ asset('js') }}/imagesloaded.pkgd.min.js"></script>
+  <script src="{{ asset('js') }}/isotope.pkgd.min.js"></script>
+  <script src="{{ asset('js') }}/dark-rtl.js"></script>
+  <script src="{{ asset('js') }}/active.js"></script>
+  <script src="{{ asset('js') }}/pwa.js"></script>
   <!-- Leaflet JS -->
   @stack('leaflet')
 
   @section('scripts')
-    <script src="{{ secure_asset('js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ secure_asset('js/internet-status.js') }}"></script>
-    <script src="{{ secure_asset('js/dark-rtl.js') }}"></script>
-    <script src="{{ secure_asset('js/pswmeter.js') }}"></script>
-    <script src="{{ secure_asset('js/active.js') }}"></script>
-    <script src="{{ secure_asset('js/pwa.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/internet-status.js') }}"></script>
+    <script src="{{ asset('js/dark-rtl.js') }}"></script>
+    <script src="{{ asset('js/pswmeter.js') }}"></script>
+    <script src="{{ asset('js/active.js') }}"></script>
+    <script src="{{ asset('js/pwa.js') }}"></script>
   @endsection
             
 </body>
