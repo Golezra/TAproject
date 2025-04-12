@@ -8,6 +8,6 @@ class AdminSettingController extends Controller
 {
     public function index()
     {
-        return view('admin.settings.index'); // Pastikan view ini ada
+        return view('admin.settings.index'); 
     }
 }

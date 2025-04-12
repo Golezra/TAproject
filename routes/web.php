@@ -12,6 +12,7 @@ use App\Http\Controllers\AdminSettingController;
 use App\Http\Controllers\SaldoController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\AdminValidasiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -86,13 +87,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/riwayat-lapor/{id}/edit', [LaporSampahController::class, 'edit'])->name('riwayat-lapor.edit');
     Route::patch('/riwayat-lapor/{id}/validasi', [LaporSampahController::class, 'validasi'])->name('riwayat-lapor.validasi');
     Route::delete('/admin/users/{id}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+    Route::get('/admin/users/{id}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/admin/users/{id}', [AdminUserController::class, 'update'])->name('admin.users.update');
+    Route::get('/admin/validasi', [AdminValidasiController::class, 'index'])->name('admin.validasi.index');
+    Route::post('/admin/validasi/{id}', [AdminValidasiController::class, 'validasi'])->name('admin.validasi');
+    Route::get('/admin/validasi/cetak-pdf', [AdminValidasiController::class, 'cetakPdf'])->name('admin.validasi.cetak-pdf');
 });
 
 // Rute Laporan Sampah
 Route::middleware(['auth'])->group(function () {
     Route::get('/riwayat-lapor', [LaporSampahController::class, 'riwayat'])->name('riwayat-lapor');
-    Route::put('/riwayat-lapor/{id}', [LaporSampahController::class, 'update'])->name('riwayat-lapor.update');
-    Route::delete('/riwayat-lapor/{id}', [LaporSampahController::class, 'destroy'])->name('riwayat-lapor.delete');
     Route::get('/riwayat-lapor/{id}/pembayaran', [LaporSampahController::class, 'pembayaran'])->name('riwayat-lapor.pembayaran');
     Route::post('/riwayat-lapor/{id}/bayar', [LaporSampahController::class, 'bayar'])->name('riwayat-lapor.bayar');
 });

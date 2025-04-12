@@ -5071,11 +5071,13 @@ form .btn-lg {
   position: relative;
   z-index: 1;
   width: 100%;
-  min-height: 100vh !important;
+  min-height: 100vh;
   overflow: hidden;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  align-items: center;
+  justify-content: center;
   -webkit-box-align: end;
       -ms-flex-align: end;
           align-items: flex-end;
@@ -5083,19 +5085,29 @@ form .btn-lg {
 
 .hero-block-content {
   position: relative;
-  padding: 3rem 0;
+  padding: 2rem 0;
   width: 100%;
   z-index: 10;
 }
 .hero-block-content img {
-  max-height: 15rem;
+  max-width: 100%;
+  height: auto;
 }
 .hero-block-content h2 {
   font-weight: 500;
 }
 .hero-block-content p {
   font-size: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+}
+
+.hero-title {
+  font-size: 2rem;
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem; /* Ukuran default */
+  font-size: 1rem; /* Ukuran default */
 }
 
 .hero-block-styles .hb-styles1 {
@@ -5149,21 +5161,33 @@ form .btn-lg {
   color: var(--warning-500);
 }
 
-@media (max-width: 576px) {
-  .hero-block-content img {
-      max-height: 10rem; /* Kurangi tinggi gambar untuk layar kecil */
+@media only screen and (max-width: 576px) {
+  .hero-block-wrapper {
+      min-height: 100vh; /* Pastikan elemen memenuhi tinggi layar */
+      padding: 1rem; /* Tambahkan padding untuk layar kecil */
+      display: flex;
+      align-items: center;
+      justify-content: center;
   }
 
-  .hero-block-content h2 {
-      font-size: 1.5rem; /* Kurangi ukuran font untuk layar kecil */
+  .hero-block-content img {
+      max-height: 10rem; /* Kurangi tinggi gambar */
+      margin-bottom: 1rem; /* Kurangi margin bawah gambar */
+  }
+
+  .hero-title {
+      font-size: 1.5rem; /* Kurangi ukuran font judul */
+      margin-bottom: 0.5rem; /* Kurangi margin bawah judul */
   }
 
   .hero-block-content p {
-      font-size: 0.9rem; /* Kurangi ukuran teks */
+      font-size: 0.9rem; /* Kurangi ukuran font paragraf */
+      margin-bottom: 1rem; /* Kurangi margin bawah paragraf */
   }
 
   .btn-lg {
-      padding: 10px 20px; /* Sesuaikan ukuran tombol */
+      padding: 0.5rem 1rem; /* Sesuaikan ukuran tombol */
+      font-size: 0.9rem; /* Kurangi ukuran font tombol */
   }
 }
 
