@@ -31,7 +31,7 @@ class LaporSampahController extends Controller
         ]);
 
         // Ambil data pengguna yang sedang login
-        $user = auth()->user();
+        $user = User::find(auth()->id());
 
         // Hitung nominal berdasarkan jenis sampah dan berat
         $nominal = 0;
@@ -70,8 +70,9 @@ class LaporSampahController extends Controller
         LaporSampah::create($data);
 
         // Perbarui jumlah laporan pengguna
-        $user->increment('jumlah_lapor');
-        $user->refresh();
+        // Pastikan jumlah_lapor ada di model User dan di database
+        $user->jumlah_lapor = $user->jumlah_lapor + 1;
+        $user->save();
 
         Log::info('Jumlah laporan pengguna:', ['user_id' => $user->id, 'jumlah_lapor' => $user->jumlah_lapor]);
 
@@ -90,7 +91,7 @@ class LaporSampahController extends Controller
         if ($request->has('month')) {
             $month = $request->month;
             $query->whereMonth('created_at', '=', date('m', strtotime($month)))
-                  ->whereYear('created_at', '=', date('Y', strtotime($month)));
+                ->whereYear('created_at', '=', date('Y', strtotime($month)));
         }
 
         $laporan = $query->get();
@@ -222,5 +223,23 @@ class LaporSampahController extends Controller
         Log::info('Status pembayaran diperbarui untuk order_id: ' . $orderId . ' dengan status: ' . $transactionStatus);
 
         return response()->json(['message' => 'Notifikasi berhasil diproses'], 200);
+    }
+
+    public function ubahStatus(Request $request, $id)
+    {
+        // Temukan laporan berdasarkan ID
+        $laporan = LaporSampah::findOrFail($id);
+
+        // Validasi input status
+        $request->validate([
+            'status' => 'required|string|in:pending,diangkut,selesai', // Sesuaikan dengan status yang diizinkan
+        ]);
+
+        // Ubah status laporan
+        $laporan->status = $request->status;
+        $laporan->save();
+
+        // Redirect kembali dengan pesan sukses
+        return redirect()->back()->with('success', 'Status laporan berhasil diubah menjadi ' . $request->status);
     }
 }

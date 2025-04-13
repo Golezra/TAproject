@@ -46,4 +46,13 @@
         <a href="{{ route('tim-operasional.dashboard') }}" class="btn btn-primary">Kembali ke Dashboard</a>
     </div>
 </div>
+
+<!-- Footer Nav -->
+    <div class="footer-nav-area" id="footerNav">
+        <div class="container px-0">
+            <!-- Footer Content -->
+            @include('components.footer')
+        </div>
+    </div>
+    
 @endsection

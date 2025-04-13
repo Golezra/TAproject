@@ -48,3 +48,43 @@ document.addEventListener('readystatechange', event => {
         }, 1000);
     }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const countdownElement = document.getElementById('countdown2');
+
+    if (countdownElement) {
+        const targetDate = countdownElement.getAttribute('data-date');
+        const targetTime = countdownElement.getAttribute('data-time');
+        const targetDateTime = new Date(`${targetDate} ${targetTime}`);
+
+        function updateCountdown() {
+            const now = new Date();
+            const timeDifference = targetDateTime - now;
+
+            if (timeDifference <= 0) {
+                countdownElement.innerHTML = '<h3>Event has started!</h3>';
+                return;
+            }
+
+            const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+            countdownElement.querySelector('.day .num').textContent = days;
+            countdownElement.querySelector('.day .word').textContent = days === 1 ? 'Day' : 'Days';
+
+            countdownElement.querySelector('.hour .num').textContent = hours;
+            countdownElement.querySelector('.hour .word').textContent = hours === 1 ? 'Hour' : 'Hours';
+
+            countdownElement.querySelector('.min .num').textContent = minutes;
+            countdownElement.querySelector('.min .word').textContent = minutes === 1 ? 'Minute' : 'Minutes';
+
+            countdownElement.querySelector('.sec .num').textContent = seconds;
+            countdownElement.querySelector('.sec .word').textContent = seconds === 1 ? 'Second' : 'Seconds';
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    }
+});

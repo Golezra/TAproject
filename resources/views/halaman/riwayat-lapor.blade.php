@@ -177,11 +177,11 @@
     </div>
 </div>
 
-@endsection
-
 <!-- Footer Nav -->
 <div class="footer-nav-area" id="footerNav">
     <div class="container px-0">
         @include('components.footer')
     </div>
 </div>
+@endsection
+

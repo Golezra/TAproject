@@ -62,9 +62,9 @@
                     <div class="card text-white bg-info mb-3">
                         <div class="card-header">Manajemen Insentif</div>
                         <div class="card-body">
-                            <h5 class="card-title">Laporan Insentif</h5>
+                            <h5 class="card-title">Menambahkan Poin</h5>
                             <p class="card-text">Kelola insentif berdasarkan laporan warga.</p>
-                            <a href="#" class="btn btn-light">Lihat Detail</a>
+                            <a href="{{ route('admin.insentif.add-poin') }}" class="btn btn-light">Lihat Detail</a>
                         </div>
                     </div>
                 </div>

@@ -9,7 +9,7 @@ use App\Http\Controllers\WargaController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\AdminSettingController;
-use App\Http\Controllers\SaldoController;
+use App\Http\Controllers\AdminInsentifController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminValidasiController;
@@ -92,6 +92,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/validasi', [AdminValidasiController::class, 'index'])->name('admin.validasi.index');
     Route::post('/admin/validasi/{id}', [AdminValidasiController::class, 'validasi'])->name('admin.validasi');
     Route::get('/admin/validasi/cetak-pdf', [AdminValidasiController::class, 'cetakPdf'])->name('admin.validasi.cetak-pdf');
+
+    // Rute Insentif
+    Route::prefix('admin/insentif')->group(function () {
+        Route::get('/add-poin', [AdminInsentifController::class, 'create'])->name('admin.insentif.add-poin');
+        Route::post('/add-poin', [AdminInsentifController::class, 'store'])->name('admin.insentif.add-poin');
+    });
 });
 
 // Rute Laporan Sampah
@@ -99,6 +105,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/riwayat-lapor', [LaporSampahController::class, 'riwayat'])->name('riwayat-lapor');
     Route::get('/riwayat-lapor/{id}/pembayaran', [LaporSampahController::class, 'pembayaran'])->name('riwayat-lapor.pembayaran');
     Route::post('/riwayat-lapor/{id}/bayar', [LaporSampahController::class, 'bayar'])->name('riwayat-lapor.bayar');
+    Route::patch('/riwayat-lapor/ubah-status/{id}', [LaporSampahController::class, 'ubahStatus'])->name('riwayat-lapor.ubah-status');
 });
 
 Route::get('/lapor-sampah', [LaporSampahController::class, 'create'])->name('lapor-sampah.create');
@@ -116,8 +123,10 @@ Route::get('/layouts/main', function () {
     return view('layouts.main');
 });
 
-// Rute Saldo dan Profil
-Route::get('/isi-saldo', [SaldoController::class, 'index'])->name('isi-saldo');
-
 // Rute Pembayaran
 Route::get('/pembayaran/{id}', [PaymentController::class, 'createTransaction'])->name('pembayaran.create');
+
+//Rute Coming Soon
+Route::get('/coming-soon', function () {
+    return view('halaman.coming-soon');
+})->name('halaman.coming-soon');

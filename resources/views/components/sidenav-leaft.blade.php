@@ -24,7 +24,7 @@
                     Admin
                 @endif
             </span>
-            <p class="mb-0 text-white">RT: {{ Auth::user()->rt ?? 'Tidak diketahui' }}</p> <!-- Menampilkan RT -->
+            <p class="mb-0 text-white">{{ Auth::user()->rt ?? 'Tidak diketahui' }}</p> <!-- Menampilkan RT -->
           </div>
         </div>
 
@@ -51,7 +51,7 @@
           </li>
           
           <li>
-            <a href="{{ route('isi-saldo') }}"><i class="bi bi-wallet2"></i> Bayar & Insentif
+            <a href="#"><i class="bi bi-wallet2"></i> Bayar & Insentif
               <span class="badge bg-success rounded-pill ms-2">100+</span>
             </a>
           </li>

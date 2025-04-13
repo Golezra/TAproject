@@ -1,7 +1,7 @@
 {
   "name": "SireumSmart",
   "short_name": "SireumSmart",
-  "start_url": "https://designing-world.com/affan-v1.7/home.html",
+  "start_url": "/resources/views/halaman/home.blade.php",
   "display": "standalone",
   "background_color": "#0d5afd",
   "theme_color": "#0d5afd",
